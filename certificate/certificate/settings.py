@@ -26,7 +26,7 @@ if not os.getenv('PROD', False):
     from dotenv import load_dotenv
     load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$e1(te0(6%c$j%o0(s(x$db%gzxcidt43kk)dt730q=zt(0bqq'
+SECRET_KEY = os.environ['SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -100,28 +100,17 @@ ALLOWED_HOSTS = ['*']
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if os.getenv('PROD', False) == 'True':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ['DBNAME'],
-            'USER':  os.environ['DBUSER'],
-            'PASSWORD':  os.environ['DBPASS'],
-            'HOST':  os.environ['DBHOST'],
-            'PORT': os.environ['DBPORT'],
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DBNAME'],
+        'USER':  os.environ['DBUSER'],
+        'PASSWORD':  os.environ['DBPASS'],
+        'HOST':  os.environ['DBHOST'],
+        'PORT': os.environ['DBPORT'],
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'certificatedb',
-            'USER':  'postgres',
-            'PASSWORD':  'rootroot',
-            'HOST':  'localhost',
-            'PORT': 5432,
-        }
-    }
+}
+
 
 
 
