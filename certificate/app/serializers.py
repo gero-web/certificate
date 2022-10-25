@@ -11,6 +11,7 @@ class HtmlSerializers(serializers.ModelSerializer):
         model=Html
         fields = '__all__'
 
+
 class ComponentSeralizers(serializers.ModelSerializer):
     
     class Meta:

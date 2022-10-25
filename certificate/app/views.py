@@ -49,13 +49,11 @@ class ComponentViewsSet(ModelViewSet):
              'font': request.data.get('font',None),
              'font_size': request.data.get('font_size',None),
              'font_weight': request.data.get('font_weight',None),
-             'font_weight': request.data.get('width',None),
         }
         
         return  data_html,data_component, data_attribute 
     
     def create(self, request, *args, **kwargs):
-        print(request.data)
         data_html,data_component, data_attribute = self._parse_req(request)
         attribute = AttributeSerializers(data=data_attribute)
         html = HtmlSerializers(data=data_html)
