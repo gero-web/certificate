@@ -11,20 +11,17 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+from dotenv import load_dotenv
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv('./setting.env')
 
-if not os.getenv('PROD', False):
-    from dotenv import load_dotenv
-    load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-if not os.getenv('PROD', False):
-    from dotenv import load_dotenv
-    load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET']
 
@@ -43,10 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'app.apps.AppConfig',
-    'drf_spectacular',
-    'drf_spectacular_sidecar'
+  
 ]
 
 MIDDLEWARE = [
@@ -61,25 +55,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'certificate.urls'
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
-    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
-    'REDOC_DIST': 'SIDECAR',
-
-}
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,7 +88,6 @@ DATABASES = {
         'PORT': os.environ['DBPORT'],
     }
 }
-
 
 
 # Password validation
@@ -148,10 +126,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
