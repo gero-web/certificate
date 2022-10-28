@@ -1,14 +1,15 @@
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.attributeSerializers import AttributeSerializers
+from app.serializers.invalidSerializers import InvalidSerializer
 from app.models import Attribute
 from drf_spectacular.utils import extend_schema
 
 
 class AttributeViewsSet(ModelViewSet):
-    queryset = Attribute.objects.all()
+    queryset = Attribute.objects.all().order_by('pk')
     serializer_class = AttributeSerializers
     permission_classes = [
         permissions.AllowAny,
@@ -19,18 +20,37 @@ class AttributeViewsSet(ModelViewSet):
         MultiPartParser,
     )
 
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method PUT not allowed"})
+    @extend_schema(
+        request=AttributeSerializers,
+        responses={status.HTTP_200_OK: AttributeSerializers, status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
+    )
+    def list(self, request, *args, **kwargs):
+        return super(AttributeViewsSet, self).list(request, *args, **kwargs)
 
-        try:
-            instance = Attribute.objects.get(pk=pk)
-        except:
-            return Response({"error": "Object does not exists"})
+    @extend_schema(
+        request=AttributeSerializers,
+        responses={status.HTTP_200_OK: AttributeSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
+    )
+    def update(self, request, *args, **kwargs):
+        return super(AttributeViewsSet, self).update(request, *args, **kwargs)
 
-        serializer = AttributeSerializers(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+    @extend_schema(
+        request=AttributeSerializers,
+        responses={status.HTTP_200_OK: AttributeSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super(AttributeViewsSet, self).retrieve(request, *args, **kwargs)
 
-        return Response({"post": serializer.data})
+    @extend_schema(
+        request=AttributeSerializers,
+        responses={status.HTTP_200_OK: AttributeSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+    )
+    def create(self, request, *args, **kwargs):
+        return super(AttributeViewsSet, self).create(request, *args, **kwargs)
+
+    @extend_schema(
+        request=AttributeSerializers,
+        responses={status.HTTP_204_NO_CONTENT: AttributeSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
+    )
+    def destroy(self, request, *args, **kwargs):
+        return super(AttributeViewsSet, self).destroy(request, *args, **kwargs)
