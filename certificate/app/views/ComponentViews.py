@@ -1,10 +1,9 @@
-import rest_framework.exceptions
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.componentSerializers import ComponentSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
-from app.models import Component
+from app.models import Component, Body, Attribute, SizeAndСoordinates
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 
@@ -55,5 +54,6 @@ class ComponentViewsSet(ModelViewSet):
         responses={status.HTTP_204_NO_CONTENT: ComponentSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def destroy(self, request, *args, **kwargs):
+
         return super(ComponentViewsSet, self).destroy(request, *args, **kwargs)
 
