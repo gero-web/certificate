@@ -31,7 +31,7 @@ class SizeAndСoordinates(models.Model):
     height = models.CharField(max_length=8)
 
     def __str__(self):
-        return f'{self.type}'
+        return f'{self.width}'
 
 
 
