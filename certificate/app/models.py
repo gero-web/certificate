@@ -23,7 +23,7 @@ class TypeComponent(models.Model):
 
 
 class SizeAndСoordinates(models.Model):
-    type = models.ForeignKey(TypeComponent, on_delete=models.CASCADE)
+  
     x = models.CharField(max_length=8)
     y = models.CharField(max_length=8)
     z = models.CharField(max_length=8)
@@ -49,6 +49,7 @@ class Body(models.Model):
 
 
 class Component(models.Model):
+    type = models.ForeignKey(TypeComponent, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
     size_and_coordinates = models.ForeignKey(SizeAndСoordinates, on_delete=models.CASCADE)
     body = models.ForeignKey(Body, on_delete=models.CASCADE)
