@@ -7,6 +7,8 @@ from .views.sizeAndСoordinatesViews import SizeAndСoordinatesViewsSet
 from .views.typeComponentViews import TypeComponentViewsSet
 from .views.attributeViews import AttributeViewsSet
 from .views.bodyViews import BodyViewsSet
+from .views.certificateViews import CertificateViewsSet
+from .views.layoutViews import LayoutViewsSet
 
 
 router = DefaultRouter()
@@ -15,6 +17,8 @@ router.register('size_and_coordinates', SizeAndСoordinatesViewsSet, basename='s
 router.register('type_component', TypeComponentViewsSet, basename='type_component')
 router.register('attribute', AttributeViewsSet, basename='attribute')
 router.register('body', BodyViewsSet, basename='body')
+router.register('layout', LayoutViewsSet, basename='layout')
+router.register('certificate', CertificateViewsSet, basename='certificate')
 
 
 urlpatterns = [

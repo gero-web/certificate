@@ -23,7 +23,6 @@ class TypeComponent(models.Model):
 
 
 class SizeAndСoordinates(models.Model):
-  
     x = models.CharField(max_length=8)
     y = models.CharField(max_length=8)
     z = models.CharField(max_length=8)
@@ -31,7 +30,7 @@ class SizeAndСoordinates(models.Model):
     height = models.CharField(max_length=8)
 
     def __str__(self):
-        return f'{self.type}'
+        return f'{self.width}'
 
 
 def upload_to(instance, filename):
