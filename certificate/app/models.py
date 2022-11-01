@@ -15,8 +15,15 @@ class Attribute(models.Model):
         return f'{self.color} :: {self.font}'
 
 
-class Component(models.Model):
-    type = models.CharField(max_length=24)
+
+class TypeComponent(models.Model):
+    name = models.CharField(max_length=16)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class SizeAndСoordinates(models.Model):
     x = models.CharField(max_length=8)
     y = models.CharField(max_length=8)
     z = models.CharField(max_length=8)
@@ -27,16 +34,37 @@ class Component(models.Model):
         return f'{self.type}'
 
 
-class Html(models.Model):
-    name = models.CharField(max_length=16, blank=True, null=True)
+
+def upload_to(instance, filename):
+    return f'images/{instance.name}/{filename}'
+
+
+class Body(models.Model):
+    name = models.CharField(max_length=16)
     text = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=100, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None, max_length=100,
+                              blank=True, null=True)
+
 
     def __str__(self):
         return f'{self.name}'
 
 
-class Layout(models.Model):
+
+class Component(models.Model):
+    type = models.ForeignKey(TypeComponent, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+    size_and_coordinates = models.ForeignKey(SizeAndСoordinates, on_delete=models.CASCADE)
+    body = models.ForeignKey(Body, on_delete=models.CASCADE)
+
+
+
+
+class Certificate(models.Model):
+    component = models.ManyToManyField(Component, through='Layout')
+
+
+
+class Layout(models.Model):
+    certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE)
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
-    html = models.ForeignKey(Html, on_delete=models.CASCADE)
