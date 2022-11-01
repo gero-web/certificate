@@ -15,6 +15,7 @@ class Attribute(models.Model):
         return f'{self.color} :: {self.font}'
 
 
+
 class TypeComponent(models.Model):
     name = models.CharField(max_length=16)
 
@@ -23,7 +24,6 @@ class TypeComponent(models.Model):
 
 
 class SizeAndСoordinates(models.Model):
-  
     x = models.CharField(max_length=8)
     y = models.CharField(max_length=8)
     z = models.CharField(max_length=8)
@@ -32,6 +32,7 @@ class SizeAndСoordinates(models.Model):
 
     def __str__(self):
         return f'{self.type}'
+
 
 
 def upload_to(instance, filename):
@@ -44,8 +45,10 @@ class Body(models.Model):
     image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None, max_length=100,
                               blank=True, null=True)
 
+
     def __str__(self):
         return f'{self.name}'
+
 
 
 class Component(models.Model):
@@ -55,8 +58,11 @@ class Component(models.Model):
     body = models.ForeignKey(Body, on_delete=models.CASCADE)
 
 
+
+
 class Certificate(models.Model):
     component = models.ManyToManyField(Component, through='Layout')
+
 
 
 class Layout(models.Model):

@@ -16,10 +16,10 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 if not os.getenv('PROD', False):
     from dotenv import load_dotenv
     load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
+
 
 
 SECRET_KEY = os.environ['SECRET']
@@ -37,12 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'app.apps.AppConfig',
     'rest_framework',
     'drf_spectacular',
     'drf_spectacular_sidecar'
-
-
 ]
 
 
@@ -110,6 +109,7 @@ DATABASES = {
             'PORT': os.environ['DBPORT'],
         }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
