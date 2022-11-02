@@ -20,8 +20,6 @@ if not os.getenv('PROD', False):
     from dotenv import load_dotenv
     load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
 
-
-
 SECRET_KEY = os.environ['SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
