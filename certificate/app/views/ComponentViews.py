@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.componentSerializers import ComponentSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
@@ -19,6 +19,7 @@ class ComponentViewsSet(ModelViewSet):
     parser_classes = (
         FormParser,
         MultiPartParser,
+        JSONParser,
     )
 
     @extend_schema(
