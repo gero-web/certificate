@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 from rest_framework import status
 from app.serializers.invalidSerializers import InvalidSerializer
 from rest_framework.viewsets import ModelViewSet
@@ -18,6 +18,7 @@ class BodyViewsSet(ModelViewSet):
     parser_classes = (
         FormParser,
         MultiPartParser,
+        JSONParser,
     )
 
     @extend_schema(
