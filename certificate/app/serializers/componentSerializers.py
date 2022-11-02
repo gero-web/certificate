@@ -1,21 +1,58 @@
 from rest_framework import serializers
-from ..models import Component
+from app.models import Component, Body, SizeAndСoordinates, Attribute
+from .sizeAndСoordinatesSerializers import SizeAndСoordinatesSerializers
+from .attributeSerializers import AttributeSerializers
+from .typeComponentSerializers import TypeComponentSerializers
+from app.serializers.bodySerializers import BodySerializers
 
 
 class ComponentSerializers(serializers.ModelSerializer):
+    # type = TypeComponentSerializers(many=False)
 
-    # type = TypeComponentSerializers()
+    # body = BodySerializers(many=False)
+    # size_and_coordinates = SizeAndСoordinatesSerializers(many=False)
+    # attribute = AttributeSerializers(many=False)
+
+    def create(self, validated_data):
+        type = validated_data['type']
+
+        # body = Body.objects.create(**validated_data['body'])
+        # size_and_coordinates = SizeAndСoordinates.objects.create(**validated_data['size_and_coordinates'])
+        # attribute = Attribute.objects.create(**validated_data['attribute'])
+
+        body = validated_data['body']
+        size_and_coordinates = validated_data['size_and_coordinates']
+        attribute = validated_data['attribute']
+
+        component = Component.objects.create(type=type, body=body, size_and_coordinates=size_and_coordinates, attribute=attribute)
+        return component
 
     def update(self, instance, validated_data):
-        # instance.TypeComponent = validated_data.get('type', instance.type)
-        instance.x = validated_data.get('x', instance.x)
-        instance.y = validated_data.get('y', instance.y)
-        instance.z = validated_data.get('z', instance.z)
-        instance.width = validated_data.get('width', instance.width)
-        instance.height = validated_data.get('height', instance.height)
+
+        # body = Body.objects.get(pk=instance.pk)
+        # body.name = validated_data['body']['name']
+        # body.image = validated_data['body']['image']
+        # body.text = validated_data['body']['text']
+        # body.save()
+        #
+        # SizeAndСoordinates.objects.filter(pk=instance.size_and_coordinates.pk).update(**validated_data['size_and_coordinates'])
+        # Attribute.objects.filter(pk=instance.attribute.pk).update(**validated_data['attribute'])
+
+        instance.body = validated_data['body']
+        instance.size_and_coordinates = validated_data['size_and_coordinates']
+        instance.attribute = validated_data['attribute']
+
+        instance.type = validated_data['type']
         instance.save()
-        return instance
+
+        return Component.objects.get(pk=instance.pk)
 
     class Meta:
         model = Component
-        fields = '__all__'
+        fields = (
+            'type',
+            'body',
+            'size_and_coordinates',
+            'attribute',
+        )
+        

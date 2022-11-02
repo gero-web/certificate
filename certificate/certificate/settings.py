@@ -16,26 +16,19 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 if not os.getenv('PROD', False):
     from dotenv import load_dotenv
     load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-if not os.getenv('PROD', False):
-    from dotenv import load_dotenv
-    load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,7 +41,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar'
 
+
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,6 +59,8 @@ ROOT_URLCONF = 'certificate.urls'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
 }
 
 SPECTACULAR_SETTINGS = {
@@ -74,6 +71,7 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
+    'COMPONENT_SPLIT_REQUEST': True,
 
 }
 
@@ -101,17 +99,16 @@ ALLOWED_HOSTS = ['*']
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DBNAME'],
-        'USER':  os.environ['DBUSER'],
-        'PASSWORD':  os.environ['DBPASS'],
-        'HOST':  os.environ['DBHOST'],
-        'PORT': os.environ['DBPORT'],
-    }
+
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DBNAME'],
+            'USER':  os.environ['DBUSER'],
+            'PASSWORD':  os.environ['DBPASS'],
+            'HOST':  os.environ['DBHOST'],
+            'PORT': os.environ['DBPORT'],
+        }
 }
-
-
 
 
 # Password validation
