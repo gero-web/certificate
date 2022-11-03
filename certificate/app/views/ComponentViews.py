@@ -1,9 +1,9 @@
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.componentSerializers import ComponentSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
-from app.models import Component, Body, Attribute, SizeAndСoordinates
+from app.models import Component
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 
@@ -19,6 +19,7 @@ class ComponentViewsSet(ModelViewSet):
     parser_classes = (
         FormParser,
         MultiPartParser,
+        JSONParser,
     )
 
     @extend_schema(
