@@ -1,9 +1,9 @@
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.componentSerializers import ComponentSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
-from app.models import Component, Body, Attribute, SizeAndСoordinates
+from app.models import Component
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 
@@ -48,6 +48,7 @@ class ComponentViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
+        print(request)
         return super().create(request, *args, **kwargs)
 
     @extend_schema(

@@ -4,16 +4,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Attribute(models.Model):
-    color = models.CharField(max_length=16)
-    font = models.CharField(max_length=24)
-    font_size = models.CharField(max_length=8)
-    font_weight = models.CharField(max_length=8)
-
-    def __str__(self):
-        return f'{self.color} :: {self.font}'
-
-
 class TypeComponent(models.Model):
     name = models.CharField(max_length=16)
 
@@ -21,37 +11,24 @@ class TypeComponent(models.Model):
         return f'{self.name}'
 
 
-class SizeAndСoordinates(models.Model):
-    x = models.CharField(max_length=8)
-    y = models.CharField(max_length=8)
-    z = models.CharField(max_length=8)
-    width = models.CharField(max_length=8)
-    height = models.CharField(max_length=8)
-
-    def __str__(self):
-        return f'{self.width}'
-
-
 def upload_to(instance, filename):
-    return f'images/{instance.name}/{filename}'
-
-
-class Body(models.Model):
-    name = models.CharField(max_length=16)
-    text = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None, max_length=100,
-                              blank=True, null=True)
-
-    def __str__(self):
-        return f'{self.name}'
+    return f'images/{instance.type.name}/{filename}'
 
 
 class Component(models.Model):
     type = models.ForeignKey(TypeComponent, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
-    size_and_coordinates = models.ForeignKey(SizeAndСoordinates, on_delete=models.CASCADE)
-    body = models.ForeignKey(Body, on_delete=models.CASCADE)
-
+    color = models.CharField(max_length=16,  blank=True, null=True)
+    font = models.CharField(max_length=24, blank=True, null=True)
+    font_size = models.CharField(max_length=8,  blank=True, null=True)
+    font_weight = models.CharField(max_length=8, blank=True, null=True)
+    x = models.CharField(max_length=8, default="")
+    y = models.CharField(max_length=8, default="")
+    z = models.CharField(max_length=8, default="")
+    width = models.CharField(max_length=8, default="")
+    height = models.CharField(max_length=8 , default="")
+    text = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None,
+                              blank=True, null=True)
 
 class Certificate(models.Model):
     component = models.ManyToManyField(Component, through='Layout')
@@ -59,4 +36,5 @@ class Certificate(models.Model):
 
 class Layout(models.Model):
     certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE)
+
     component = models.ForeignKey(Component, on_delete=models.CASCADE)

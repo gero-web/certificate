@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.parsers import JSONParser, FormParser
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.typeComponentSerializers import TypeComponentSerializers
 from app.models import TypeComponent
@@ -17,12 +17,14 @@ class TypeComponentViewsSet(ModelViewSet):
 
     parser_classes = (
         FormParser,
+        MultiPartParser,
         JSONParser,
     )
 
     @extend_schema(
         request=TypeComponentSerializers,
-        responses={status.HTTP_200_OK: TypeComponentSerializers, status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
+        responses={status.HTTP_200_OK: TypeComponentSerializers,
+                   status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
         return super(TypeComponentViewsSet, self).list(request, *args, **kwargs)
@@ -54,4 +56,3 @@ class TypeComponentViewsSet(ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         return super(TypeComponentViewsSet, self).destroy(request, *args, **kwargs)
-
