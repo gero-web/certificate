@@ -5,15 +5,12 @@ from .certificateSerializers import CertificateSerializers
 
 
 class LayoutSerializer(serializers.ModelSerializer):
-    #component = ComponentSerializers(many=True)
+    component = ComponentSerializers(many=True, required=True, read_only=False)
+    layout_key = serializers.SlugField(read_only=True, required=False)
     # certificate = CertificateSerializers(many=False)
 
-    # def create(self, validated_data):
-    #     component = validated_data['component']
-    #     certificate = validated_data['certificate']
-    #     layout = Layout.objects.create(component=component, certificate=certificate)
-    #     return layout
-    #
+
+
     # def update(self, instance, validated_data):
     #     instance.component = validated_data['component']
     #     instance.certificate = validated_data['certificate']
@@ -22,4 +19,8 @@ class LayoutSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Layout
-        fields = '__all__'
+        fields = (
+                    'layout_key',
+                    'component',
+                 )
+
