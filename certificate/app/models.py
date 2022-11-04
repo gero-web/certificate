@@ -23,12 +23,12 @@ class Component(models.Model):
     font_weight = models.CharField(max_length=8, blank=True, null=True)
     x = models.CharField(max_length=8)
     y = models.CharField(max_length=8)
-    z = models.CharField(max_length=8)
-    width = models.CharField(max_length=8)
-    height = models.CharField(max_length=8)
+    width = models.CharField(max_length=8, blank=True, null=True)
+    height = models.CharField(max_length=8, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None,
                               blank=True, null=True)
+    opacity = models.CharField(max_length=8, blank=True, null=True, default='1')
 
 
 class Certificate(models.Model):

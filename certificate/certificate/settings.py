@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
     'app.apps.AppConfig',
     'rest_framework',
     'drf_spectacular',
@@ -102,7 +101,7 @@ ALLOWED_HOSTS = ['*']
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-import dj_database_url
+
 DATABASES = {
        'default': {
             'ENGINE': 'django.db.backends.postgresql',

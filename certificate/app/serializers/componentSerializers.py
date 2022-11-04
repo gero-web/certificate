@@ -1,5 +1,4 @@
 from app.models import Component
-
 from rest_framework import serializers
 
 
