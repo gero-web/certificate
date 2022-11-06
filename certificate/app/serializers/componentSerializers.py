@@ -29,6 +29,7 @@ class Base64ImageField(serializers.ImageField):
 
             complete_file_name = "%s.%s" % (file_name, file_extension,)
 
+
             data = ContentFile(decoded_file, name=complete_file_name)
 
         return super(Base64ImageField, self).to_internal_value(data)
@@ -46,6 +47,14 @@ class ComponentSerializers(serializers.ModelSerializer):
     image = Base64ImageField(
         max_length=None, use_url=True, required=False
     )
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['type'] = instance.type.name  # or replace the name with your pricing name field
+        return data
+
     class Meta:
         model = Component
         fields = '__all__'
+
+

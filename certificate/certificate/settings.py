@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.apps.AppConfig',
+    'generate_certificate.apps.GenerateCertificateConfig',
     'rest_framework',
     'drf_spectacular',
     'drf_spectacular_sidecar'
@@ -81,7 +82,7 @@ SPECTACULAR_SETTINGS = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ os.path.join(BASE_DIR, 'template'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
