@@ -1,3 +1,5 @@
+from email.policy import default
+from pyexpat import model
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -29,14 +31,17 @@ class Component(models.Model):
     image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None,
                               blank=True, null=True)
     opacity = models.CharField(max_length=8, blank=True, null=True, default='1')
+    
+    def __unicode__(self):
+        return self.type.name
 
-
-class Certificate(models.Model):
-    pass
-   # component = models.ManyToManyField(Component, through='Layout')
 
 
 class Layout(models.Model):
-   # certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE,  blank=True, null=True)
     layout_key = models.SlugField(blank=True, null=True)
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    
+class Certificate(models.Model):
+    certificate_key = models.SlugField()
+    layout = models.ForeignKey(Layout, on_delete=models.CASCADE, default=None ,blank=True, null=True)
+

@@ -6,7 +6,8 @@
 </head>
 <body>
     {% for comp in components %}
-        <img src="{{comp.image.url}}"> </img>
+
+      <p>{{comp.type.name}}</p>
     {%endfor%}
 </body>
 </html>

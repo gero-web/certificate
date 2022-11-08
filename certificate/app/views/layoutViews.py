@@ -81,10 +81,10 @@ class LayoutViewsSet(ModelViewSet):
                 for comp in saved_component:
                     Layout.objects.create(component=comp, layout_key=layout_key)
         else:
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, headers=headers)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+     
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         request=LayoutSerializer,

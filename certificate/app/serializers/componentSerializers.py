@@ -1,3 +1,4 @@
+import collections
 from app.models import Component
 from rest_framework import serializers
 
@@ -49,7 +50,8 @@ class ComponentSerializers(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['type'] = instance.type.name  # or replace the name with your pricing name field
+        if isinstance(data, Component):
+            data['type'] = instance.type.name  # or replace the name with your pricing name field
         return data
 
     class Meta:
