@@ -45,7 +45,7 @@ class ComponentViewsSet(ModelViewSet):
 
     @extend_schema(
         request=ComponentSerializers,
-        responses={status.HTTP_200_OK: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+        responses={status.HTTP_201_CREATED: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
         print(request)

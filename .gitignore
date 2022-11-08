@@ -52,3 +52,9 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+env/
+data_pg/
+myjs/
+.vscode/
+parsser_xsl_to_json.py
+.gitignore
