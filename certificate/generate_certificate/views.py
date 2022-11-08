@@ -35,8 +35,8 @@ def postExcel(request):
     if excelSerializer.is_valid():
       components = Component.objects.filter(layout__layout_key=excelSerializer.data['layout_key'])
       cer = Certificate.objects.create(certificate_key = uuid.uuid4())
-      for component in Component:
-           cer.component_set.add(component)
+      for component in components:
+           cer.components.add(component)
            print(cer)
      
     components = Component.objects.filter(layout__layout_key=excelSerializer.data['layout_key'])
