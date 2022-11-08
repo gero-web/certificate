@@ -33,11 +33,11 @@ def Get_Certificate(request, layout_key):
 def postExcel(request):
     excelSerializer = ExcelSerializers(data=request.data)
     if excelSerializer.is_valid():
-      list_layout = Layout.objects.filter(layout_key=excelSerializer.data['layout_key'])
+      components = Component.objects.filter(layout__layout_key=excelSerializer.data['layout_key'])
       cer = Certificate.objects.create(certificate_key = uuid.uuid4())
-      for layout in list_layout:
-           layout.certificate = cer
-           print(layout)
+      for component in Component:
+           cer.component_set.add(component)
+           print(cer)
      
     components = Component.objects.filter(layout__layout_key=excelSerializer.data['layout_key'])
     if( not components):

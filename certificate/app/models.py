@@ -43,5 +43,5 @@ class Layout(models.Model):
     
 class Certificate(models.Model):
     certificate_key = models.SlugField()
-    layout = models.ForeignKey(Layout, on_delete=models.CASCADE, default=None ,blank=True, null=True)
+    components = models.ManyToManyField(Component)
 
