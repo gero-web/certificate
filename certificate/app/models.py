@@ -19,9 +19,9 @@ def upload_to(instance, filename):
 
 class Component(models.Model):
     type = models.ForeignKey(TypeComponent, on_delete=models.CASCADE)
-    color = models.CharField(max_length=30,  blank=True, null=True)
+    color = models.CharField(max_length=30, blank=True, null=True)
     font = models.CharField(max_length=24, blank=True, null=True)
-    font_size = models.CharField(max_length=8,  blank=True, null=True)
+    font_size = models.CharField(max_length=8, blank=True, null=True)
     font_weight = models.CharField(max_length=8, blank=True, null=True)
     x = models.CharField(max_length=8, null=True, blank=True)
     y = models.CharField(max_length=8, null=True, blank=True)
@@ -31,17 +31,16 @@ class Component(models.Model):
     image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None,
                               blank=True, null=True)
     opacity = models.CharField(max_length=8, blank=True, null=True, default='1')
-    
+
     def __unicode__(self):
         return self.type.name
-
 
 
 class Layout(models.Model):
     layout_key = models.SlugField(blank=True, null=True)
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
-    
+
+
 class Certificate(models.Model):
     certificate_key = models.SlugField()
     components = models.ManyToManyField(Component)
-

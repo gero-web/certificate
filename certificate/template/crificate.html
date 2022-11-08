@@ -6,8 +6,76 @@
 </head>
 <body>
     {% for comp in components %}
+        {%if comp.type.name == 'logo'%}
+            <img style="width:{{comp.width}};
+                        margin-top:{{comp.x}};"
+                 src="{{comp.image.url}}"
+            />
+        {%endif%}
 
-      <p>{{comp.type.name}}</p>
+        {%if comp.type.name == 'background'%}
+            <img style="
+                        width:{{comp.width}};
+                        height:{{comp.height}};
+                        opacity:{{comp.opacity}};"
+
+                 src="{{comp.image.url}}"
+            />
+        {%endif%}
+
+        {%if comp.type.name == 'certificateType'%}
+            <h1 style="
+                        color:{{comp.color}};
+                        font-size:{{comp.font_size}};
+                        font-weight:{{comp.font_weight}};"
+            >
+                {{comp.text}}  </h1>
+        {%endif%}
+
+         {%if comp.type.name == 'jobTitle'%}
+            <h3 style="
+                        margin-top:{{comp.x}};
+                        font-size:{{comp.font_size}};
+                        font-weight:{{comp.font_weight}};"
+            >
+                {{comp.text}}  </h3>
+        {%endif%}
+
+        {%if comp.type.name == 'fullName'%}
+            <h1 style="
+                        margin-top:{{comp.x}};
+                        font-size:{{comp.font_size}};
+                        font-weight:{{comp.font_weight}};
+                        margin-top:{{comp.x}};
+                        color: {{comp.color}};"
+            >
+                {{comp.text}}  </h1>
+        {%endif%}
+
+        {%if comp.type.name == 'textBody'%}
+            <p style="
+                        margin-top:{{comp.x}};
+                        font-size:{{comp.font_size}};
+                        font-weight:{{comp.font_weight}};
+                        color: {{comp.color}};"
+            >
+                {{comp.text}}  </p>
+        {%endif%}
+
+         {%if comp.type.name == 'textBody2'%}
+            <p style="
+
+                        font-size:{{comp.font_size}};
+                        font-weight:{{comp.font_weight}};
+                        margin-top:{{comp.x}};
+                        color: {{comp.color}};"
+            >
+                {{comp.text}}  </p>
+        {%endif%}
+
+
+
+
     {%endfor%}
 </body>
 </html>
