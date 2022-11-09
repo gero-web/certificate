@@ -1,0 +1,72 @@
+
+.wrapper {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 1754px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    justify-content: space-around;
+}
+
+
+
+.logo, .textBlock,
+.organizationBlock {
+    position: relative;
+    z-index: 2;
+}
+
+
+.textBlock {
+    max-width: 900px;
+    height: 1100px;
+    margin-top: -40px;
+}
+
+
+.organizationBlock {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 1000px
+}
+
+.fullName {
+    margin-bottom: 80px;
+}
+
+.backgroundWrapper {
+    width: 100%;
+    height: 600px;
+    position: absolute;
+    z-index: 1;
+    margin-top: -400px;
+    background-color: rgb(204, 218, 249, 0.2);
+}
+
+.background {
+    background-size: cover;
+    background-position: center center;
+}
+
+.textBody {
+    color: rgb(10, 10, 10);
+    font-weight: 600;
+    margin-top: 30px;
+    font-size: 24px;
+}
+
+.userJobTitle {
+    font-size: 18px;
+}
+
+
+.organizationName {
+    color: rgb(76, 76, 196);
+    font-weight: 600;
+    font-size: 18px;
+}
