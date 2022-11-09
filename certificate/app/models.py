@@ -1,3 +1,5 @@
+from email.policy import default
+from pyexpat import model
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -17,9 +19,9 @@ def upload_to(instance, filename):
 
 class Component(models.Model):
     type = models.ForeignKey(TypeComponent, on_delete=models.CASCADE)
-    color = models.CharField(max_length=30,  blank=True, null=True)
+    color = models.CharField(max_length=30, blank=True, null=True)
     font = models.CharField(max_length=24, blank=True, null=True)
-    font_size = models.CharField(max_length=8,  blank=True, null=True)
+    font_size = models.CharField(max_length=8, blank=True, null=True)
     font_weight = models.CharField(max_length=8, blank=True, null=True)
     x = models.CharField(max_length=8, null=True, blank=True)
     y = models.CharField(max_length=8, null=True, blank=True)
@@ -30,13 +32,15 @@ class Component(models.Model):
                               blank=True, null=True)
     opacity = models.CharField(max_length=8, blank=True, null=True, default='1')
 
-
-class Certificate(models.Model):
-    pass
-   # component = models.ManyToManyField(Component, through='Layout')
+    def __unicode__(self):
+        return self.type.name
 
 
 class Layout(models.Model):
-   # certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE,  blank=True, null=True)
     layout_key = models.SlugField(blank=True, null=True)
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
+
+
+class Certificate(models.Model):
+    certificate_key = models.SlugField()
+    components = models.ManyToManyField(Component)

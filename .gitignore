@@ -57,4 +57,3 @@ data_pg/
 myjs/
 .vscode/
 parsser_xsl_to_json.py
-.gitignore

@@ -1,3 +1,4 @@
+import collections
 from app.models import Component
 from rest_framework import serializers
 
@@ -46,6 +47,13 @@ class ComponentSerializers(serializers.ModelSerializer):
     image = Base64ImageField(
         max_length=None, use_url=True, required=False
     )
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if isinstance(data, Component):
+            data['type'] = instance.type.name  # or replace the name with your pricing name field
+        return data
+
     class Meta:
         model = Component
         fields = '__all__'
