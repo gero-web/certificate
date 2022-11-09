@@ -66,7 +66,7 @@ class LayoutViewsSet(ModelViewSet):
 
     @extend_schema(
         request=LayoutSerializer,
-        responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+        responses={status.HTTP_201_CREATED: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
         serializer: LayoutSerializer = self.get_serializer(data=request.data)

@@ -45,7 +45,7 @@ class TypeComponentViewsSet(ModelViewSet):
 
     @extend_schema(
         request=TypeComponentSerializers,
-        responses={status.HTTP_200_OK: TypeComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+        responses={status.HTTP_201_CREATED: TypeComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
