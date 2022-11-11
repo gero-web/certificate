@@ -59,7 +59,7 @@ class LayoutViewsSet(ModelViewSet):
         if not queryset:
             return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ComponentSerializers(data=queryset, many=True)
+        serializer = ComponentSerializers(data=queryset, many=True, context={"request": request})
         serializer.is_valid()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
