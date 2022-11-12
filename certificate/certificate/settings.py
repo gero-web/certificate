@@ -122,6 +122,7 @@ DATABASES = {
             'PASSWORD':  os.environ['DBPASS'],
             'HOST':  os.environ['DBHOST'],
             'PORT': os.environ['DBPORT'],
+            'ATOMIC_REQUESTS': True,
         }
 }
 
