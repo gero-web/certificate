@@ -1,7 +1,7 @@
 import json
 import uuid
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.layoutSerializer import LayoutSerializer
@@ -22,7 +22,6 @@ class LayoutViewsSet(ModelViewSet):
     lookup_field = 'layout_key'
 
     parser_classes = (
-        FormParser,
         JSONParser,
         MultiPartParser,
     )
@@ -46,7 +45,26 @@ class LayoutViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
-        return super(LayoutViewsSet, self).update(request, *args, **kwargs)
+        layout_key = kwargs.get('layout_key', None)
+        serializer: LayoutSerializer = self.get_serializer(data=request.data)
+        is_valid = serializer.is_valid(raise_exception=True)
+        if is_valid:
+            components = request.data['component']
+            if not components:
+                return Response(data={'msg': 'Components empty'}, status=status.HTTP_400_BAD_REQUEST)
+            allSerializesComponents = [ComponentSerializers(data=component) for component in components]
+            is_allValidComponent = all([comp.is_valid() for comp in allSerializesComponents])
+            if is_allValidComponent:
+                saved_component = [comp.save() for comp in allSerializesComponents]
+                for comp in saved_component:
+                    Layout.objects.create(component=comp, layout_key=layout_key)
+            else:
+                return Response(data={'msg': 'Component is not valid'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(data={'layout_key': layout_key}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         request=LayoutSerializer,
@@ -77,7 +95,6 @@ class LayoutViewsSet(ModelViewSet):
                  return Response(data={'msg': 'Components empty'}, status=status.HTTP_400_BAD_REQUEST)
             allSerializesComponents = [ComponentSerializers(data=component) for component in components]
             is_allValidComponent = all([comp.is_valid() for comp in allSerializesComponents])
-            print(is_allValidComponent)
             if is_allValidComponent:
                 saved_component = [comp.save() for comp in allSerializesComponents]
                 layout_key = uuid.uuid4()
@@ -89,7 +106,7 @@ class LayoutViewsSet(ModelViewSet):
     
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
      
-        return Response(data={'layout_key':layout_key}, status=status.HTTP_201_CREATED)
+        return Response(data={'layout_key': layout_key}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         request=LayoutSerializer,
@@ -104,4 +121,4 @@ class LayoutViewsSet(ModelViewSet):
 
         for comp in queryset:
             comp.delete()
-        return Response( status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)

@@ -15,6 +15,8 @@ from rest_framework.response import Response
 from django.core.files.uploadedfile import InMemoryUploadedFile;
 from django.http.response import JsonResponse
 import pandas as pd
+
+
 class CertificateViewsSet(ModelViewSet):
 
     queryset = Certificate.objects.all().order_by('pk')

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'drf_spectacular',
-    'drf_spectacular_sidecar'
+    'drf_spectacular_sidecar',
+
 ]
 
 
@@ -53,6 +54,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+]
+# CORS_ALLOW_ALL_ORIGINS = True
+# # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+# CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+   'http://localhost:3000',
+] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
+CORS_ALLOWED_ORIGIN_REGEXES = [
+   'http://localhost:3000',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -126,6 +137,11 @@ DATABASES = {
         }
 }
 
+# import dj_database_url
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://certificateuser:ljfhAd6NgE5NWTiKME9R2uEVM4xCnq3a@dpg-cdaei42en0hldb2v83p0-a.frankfurt-postgres.render.com/certificatedb')}
+#
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
