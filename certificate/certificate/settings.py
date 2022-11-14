@@ -38,19 +38,31 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'rest_framework',
     'drf_spectacular',
-    'drf_spectacular_sidecar'
+    'drf_spectacular_sidecar',
+    "corsheaders"
 ]
 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+]
+# CORS_ALLOW_ALL_ORIGINS = True
+# # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+# CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+   'http://localhost:3000',
+] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
+CORS_ALLOWED_ORIGIN_REGEXES = [
+   'http://localhost:3000',
 ]
 
 
@@ -113,6 +125,11 @@ DATABASES = {
         }
 }
 
+# import dj_database_url
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://certificateuser:ljfhAd6NgE5NWTiKME9R2uEVM4xCnq3a@dpg-cdaei42en0hldb2v83p0-a.frankfurt-postgres.render.com/certificatedb')}
+#
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -158,5 +175,5 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

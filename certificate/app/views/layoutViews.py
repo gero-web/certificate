@@ -59,7 +59,7 @@ class LayoutViewsSet(ModelViewSet):
         if not queryset:
             return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ComponentSerializers(data=queryset, many=True)
+        serializer = ComponentSerializers(data=queryset, many=True, context={"request": request})
         serializer.is_valid()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
@@ -89,7 +89,7 @@ class LayoutViewsSet(ModelViewSet):
     
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
      
-        return Response(data={'layout_key':layout_key}, status=status.HTTP_201_CREATED)
+        return Response(data={'layout_key': layout_key}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         request=LayoutSerializer,
@@ -104,4 +104,4 @@ class LayoutViewsSet(ModelViewSet):
 
         for comp in queryset:
             comp.delete()
-        return Response( status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
