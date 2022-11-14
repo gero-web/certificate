@@ -57,7 +57,7 @@ class Base64ImageField(serializers.ImageField):
 
 class ComponentSerializers(serializers.ModelSerializer):
     image = Base64ImageField(
-        max_length=None, use_url=True, required=False
+        max_length=None, use_url=True, required=False, allow_null=True
     )
 
     def to_representation(self, instance):
