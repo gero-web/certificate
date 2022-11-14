@@ -22,7 +22,6 @@ class LayoutViewsSet(ModelViewSet):
     lookup_field = 'layout_key'
 
     parser_classes = (
-        FormParser,
         JSONParser,
         MultiPartParser,
     )

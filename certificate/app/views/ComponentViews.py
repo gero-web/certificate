@@ -17,7 +17,7 @@ class ComponentViewsSet(ModelViewSet):
     ]
 
     parser_classes = (
-        FormParser,
+
         MultiPartParser,
         JSONParser,
     )
