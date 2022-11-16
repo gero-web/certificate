@@ -31,6 +31,8 @@ class Component(models.Model):
     image = models.ImageField(upload_to=upload_to, height_field=None, width_field=None,
                               blank=True, null=True)
     opacity = models.CharField(max_length=8, blank=True, null=True, default='1')
+    text_align = models.CharField(max_length=24, blank=True, null=True, default='center')
+    font_style = models.CharField(max_length=24, blank=True, null=True, default='normal')
 
     def __unicode__(self):
         return self.type.name
@@ -44,3 +46,4 @@ class Layout(models.Model):
 class Certificate(models.Model):
     certificate_key = models.SlugField()
     components = models.ManyToManyField(Component)
+    email = models.EmailField(blank=True, null=True, default='123@laifr.ru')
