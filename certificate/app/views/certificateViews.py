@@ -73,7 +73,7 @@ class CertificateViewsSet(ModelViewSet):
         exelSerializer = ExcelSerializers(data=request.data)
         if exelSerializer.is_valid():
             components = Component.objects.filter(layout__layout_key=exelSerializer.data['layout_key'])
-            email = request.data['email']
+            email = exelSerializer.data['email']
             if components:
                 if email:
                     cer = Certificate.objects.create(certificate_key=uuid.uuid4(), email=email)
