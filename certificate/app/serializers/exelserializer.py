@@ -2,5 +2,5 @@ from rest_framework import serializers
 
 
 class ExcelSerializers(serializers.Serializer):
-    excel = serializers.FileField()
     layout_key = serializers.SlugField()
+    email = serializers.EmailField(required=False)

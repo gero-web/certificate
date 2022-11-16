@@ -2,12 +2,12 @@ from email import header
 import json
 import uuid
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser,JSONParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.certificateSerializers import CertificateSerializers
 from app.serializers.exelserializer import ExcelSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
-from app.models import Certificate,Component
+from app.models import Certificate, Component
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
@@ -59,8 +59,8 @@ class CertificateViewsSet(ModelViewSet):
     )
     def retrieve(self, request, *args, **kwargs):
         certificate_key = kwargs['certificate_key']
-        print(certificate_key)
         components = Component.objects.filter(certificate__certificate_key=certificate_key)
+        # print(Certificate.objects.get(certificate_key=certificate_key).email)
         if not components:
             return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'components': components}, template_name='crificate.html')
@@ -70,11 +70,15 @@ class CertificateViewsSet(ModelViewSet):
         responses={status.HTTP_201_CREATED: uuid.uuid4(), status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
-        excelSerializer = ExcelSerializers(data=request.data)
-        if excelSerializer.is_valid():
-            components = Component.objects.filter(layout__layout_key=excelSerializer.data['layout_key'])
-            if components:     
-                cer = Certificate.objects.create(certificate_key=uuid.uuid4())
+        exelSerializer = ExcelSerializers(data=request.data)
+        if exelSerializer.is_valid():
+            components = Component.objects.filter(layout__layout_key=exelSerializer.data['layout_key'])
+            email = request.data['email']
+            if components:
+                if email:
+                    cer = Certificate.objects.create(certificate_key=uuid.uuid4(), email=email)
+                else:
+                    cer = Certificate.objects.create(certificate_key=uuid.uuid4())
                 for component in components:
                     cer.components.add(component)
                 return JsonResponse({'certificate_key': cer.certificate_key}, status=status.HTTP_201_CREATED)
