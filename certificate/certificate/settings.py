@@ -141,7 +141,7 @@ DATABASES = {
 # DATABASES = {
 #     'default': dj_database_url.config(
 #         default='postgres://certificateuser:ljfhAd6NgE5NWTiKME9R2uEVM4xCnq3a@dpg-cdaei42en0hldb2v83p0-a.frankfurt-postgres.render.com/certificatedb')}
-#
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
