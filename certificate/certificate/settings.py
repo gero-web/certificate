@@ -113,7 +113,13 @@ DATABASES = {
         }
 }
 
+EMAIL_HOST=os.environ['EMAIL_HOST']
+EMAIL_PORT=os.environ['EMAIL_PORT']
+EMAIL_HOST_USER= os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
+EMAIL_USE_SSL = os.environ['EMAIL_USE_SSL']
+EMAIL_BACKEND = os.environ['EMAIL_BACKEND']
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 

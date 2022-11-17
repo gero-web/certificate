@@ -14,7 +14,10 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.core.files.uploadedfile import InMemoryUploadedFile;
 from django.http.response import JsonResponse
-import pandas as pd
+from django.http import HttpResponse
+from app.helpers.html_certificate import html_template_certificate
+from app.sending_email import send_email
+
 class CertificateViewsSet(ModelViewSet):
 
     queryset = Certificate.objects.all().order_by('pk')
@@ -57,11 +60,11 @@ class CertificateViewsSet(ModelViewSet):
     )
     def retrieve(self, request, *args, **kwargs):
         certificate_key = kwargs['certificate_key']
-        print(certificate_key)
-        components = Component.objects.filter(certificate__certificate_key=certificate_key)
-        if not components:
-            return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'components': components}, template_name='crificate.html')
+        template = html_template_certificate(certificate_key)
+        if template is None:
+             return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
+        send_email.send(certificate_key, ['sergeq198@gmail.com',])
+        return HttpResponse(template)
 
     @extend_schema(
         request=ExcelSerializers,
