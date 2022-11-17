@@ -57,6 +57,6 @@ data_pg/
 myjs/
 .vscode/
 parsser_xsl_to_json.py
-.gitignore
-setting.env
-dokcer_post.txt
+**/media/images/
+**/myjs/
+docker_post.txt

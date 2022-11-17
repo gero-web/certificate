@@ -1,81 +1,101 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
 </head>
 <body>
+
+<div class="wrapper">
     {% for comp in components %}
         {%if comp.type.name == 'logo'%}
-            <img style="width:{{comp.width}};
-                        margin-top:{{comp.x}};"
-                 src="{{comp.image.url}}"
-            />
+                <img class="logo" style="width:{{comp.width}};
+                            margin-top:{{comp.x}};"
+                     src="{{comp.image.url}}"
+                />
         {%endif%}
+            {%if comp.type.name == 'background'%}
+                 <div class="backgroundWrapper">
+                    <img class="background" style="
+                                width:{{comp.width}};
+                                height:{{comp.height}};
+                                opacity:{{comp.opacity}};"
 
-        {%if comp.type.name == 'background'%}
-            <img style="
-                        width:{{comp.width}};
-                        height:{{comp.height}};
-                        opacity:{{comp.opacity}};"
-
-                 src="{{comp.image.url}}"
-            />
-        {%endif%}
-
-        {%if comp.type.name == 'certificateType'%}
-            <h1 style="
-                        color:{{comp.color}};
-                        font-size:{{comp.font_size}};
-                        font-weight:{{comp.font_weight}};"
-            >
-                {{comp.text}}  </h1>
-        {%endif%}
-
-         {%if comp.type.name == 'jobTitle'%}
-            <h3 style="
-                        margin-top:{{comp.x}};
-                        font-size:{{comp.font_size}};
-                        font-weight:{{comp.font_weight}};"
-            >
-                {{comp.text}}  </h3>
-        {%endif%}
-
-        {%if comp.type.name == 'fullName'%}
-            <h1 style="
-                        margin-top:{{comp.x}};
-                        font-size:{{comp.font_size}};
-                        font-weight:{{comp.font_weight}};
-                        margin-top:{{comp.x}};
-                        color: {{comp.color}};"
-            >
-                {{comp.text}}  </h1>
-        {%endif%}
-
-        {%if comp.type.name == 'textBody'%}
-            <p style="
-                        margin-top:{{comp.x}};
-                        font-size:{{comp.font_size}};
-                        font-weight:{{comp.font_weight}};
-                        color: {{comp.color}};"
-            >
-                {{comp.text}}  </p>
-        {%endif%}
-
-         {%if comp.type.name == 'textBody2'%}
-            <p style="
-
-                        font-size:{{comp.font_size}};
-                        font-weight:{{comp.font_weight}};
-                        margin-top:{{comp.x}};
-                        color: {{comp.color}};"
-            >
-                {{comp.text}}  </p>
-        {%endif%}
-
-
-
-
+                         src="{{comp.image.url}}"
+                    />
+                </div>
+            {%endif%}
     {%endfor%}
+        <div class="textBlock">
+            {% for comp in components %}
+                 {%if comp.type.name in "certificateType, jobTitle,fullName,textBody,textBody2" %}
+
+                        {%if comp.type.name == 'certificateType'%}
+                            <h1  style="
+                                                color:{{comp.color}};
+                                                font-size:{{comp.font_size}};
+                                                font-weight:{{comp.font_weight}};"
+                                    >
+                                        {{comp.text}}  </h1>
+                                {%endif%}
+
+                                 {%if comp.type.name == 'jobTitle'%}
+                                    <h3 style="
+                                                margin-top:{{comp.x}};
+                                                font-size:{{comp.font_size}};
+                                                font-weight:{{comp.font_weight}};"
+                                    >
+                                        {{comp.text}}  </h3>
+                                {%endif%}
+
+                                {%if comp.type.name == 'fullName'%}
+                                    <h1 style="
+                                                margin-top:{{comp.x}};
+                                                font-size:{{comp.font_size}};
+                                                font-weight:{{comp.font_weight}};
+                                                margin-top:{{comp.x}};
+                                                color: {{comp.color}};"
+                                    >
+                                        {{comp.text}}  </h1>
+                                {%endif%}
+
+                                {%if comp.type.name == 'textBody'%}
+                                    <p style="
+                                                margin-top:{{comp.x}};
+                                                font-size:{{comp.font_size}};
+                                                font-weight:{{comp.font_weight}};
+                                                color: {{comp.color}};"
+                                    >
+                                        {{comp.text}}  </p>
+                                {%endif%}
+
+                                 {%if comp.type.name == 'textBody2'%}
+                                    <p style="
+
+                                                font-size:{{comp.font_size}};
+                                                font-weight:{{comp.font_weight}};
+                                                margin-top:{{comp.x}};
+                                                color: {{comp.color}};"
+                                    >
+                                        {{comp.text}}  </p>
+                                {%endif%}
+
+                  {%endif%}
+            {%endfor%}
+        </div >
+
+        <div class="organizationBlock">
+            <p className={userJobTitle}>Директор по развитию</p>
+            <p className={s.userFullName}>Алёна Гейдт</p>
+        </div>
+        <div>
+            <p className={organizationName}>ИИ Навигатор</p>
+            <p className={Date}>июль 2022</p>
+        </div>
+
+    </div>
+
+
 </body>
 </html>
