@@ -40,7 +40,8 @@ class CertificateViewsSet(ModelViewSet):
     
     @extend_schema(
         description='',
-        responses={status.HTTP_200_OK: {'certificates': f'pk: {uuid.uuid4}'}, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+        responses={status.HTTP_200_OK: {'certificates': f'pk: {uuid.uuid4}'},
+                   status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().values_list('pk', 'certificate_key')  
@@ -63,7 +64,6 @@ class CertificateViewsSet(ModelViewSet):
         template = html_template_certificate(certificate_key)
         if template is None:
              return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
-        send_email.send(certificate_key, ['sergeq198@gmail.com',])
         return HttpResponse(template)
 
     @extend_schema(
