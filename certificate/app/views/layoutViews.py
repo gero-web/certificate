@@ -92,7 +92,7 @@ class LayoutViewsSet(ModelViewSet):
         if is_valid:
             components = request.data['component']
             if not components:
-                 return Response(data={'msg': 'Components empty'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data={'msg': 'Components empty'}, status=status.HTTP_400_BAD_REQUEST)
             allSerializesComponents = [ComponentSerializers(data=component) for component in components]
             is_allValidComponent = all([comp.is_valid() for comp in allSerializesComponents])
             if is_allValidComponent:
@@ -103,9 +103,9 @@ class LayoutViewsSet(ModelViewSet):
             else:
                 return Response(data={'msg': 'Component is not valid'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-    
+
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-     
+
         return Response(data={'layout_key': layout_key}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -119,10 +119,7 @@ class LayoutViewsSet(ModelViewSet):
         if not queryset:
             return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
         cetificate = queryset[0].certificate_set.all()
-        for item in cetificate:
-            cetificate.delete()
-        for comp in queryset:
-            comp.delete()
-        
-            
+        cetificate.delete()
+        queryset.delete()
+
         return Response(status=status.HTTP_200_OK)

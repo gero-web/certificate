@@ -64,6 +64,8 @@ class CertificateViewsSet(ModelViewSet):
         template = html_template_certificate(certificate_key)
         if template is None:
              return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        send_email.send(certificate_key, to=['sergeq198.97@yandex.ru'])
         return HttpResponse(template)
 
     @extend_schema(
