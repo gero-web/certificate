@@ -31,7 +31,7 @@ class LayoutViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
-        queryset = Layout.objects.all().values_list('pk', 'layout_key')
+        queryset = Layout.objects.all().values_list('pk', 'layout_key').distinct('layout_key')
         queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -118,7 +118,11 @@ class LayoutViewsSet(ModelViewSet):
 
         if not queryset:
             return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
-
+        cetificate = queryset[0].certificate_set.all()
+        for item in cetificate:
+            cetificate.delete()
         for comp in queryset:
             comp.delete()
+        
+            
         return Response(status=status.HTTP_200_OK)
