@@ -62,6 +62,7 @@ class CertificateViewsSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         certificate_key = kwargs['certificate_key']
         template = html_template_certificate(certificate_key)
+        send_email.send(certificate_key=certificate_key, to=['05murik25@mail.ru'])
         if template is None:
              return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
         return HttpResponse(template)
