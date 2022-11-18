@@ -57,6 +57,7 @@ data_pg/
 myjs/
 .vscode/
 parsser_xsl_to_json.py
+/certificate/media/
 **/media/images/
 **/myjs/
 docker_post.txt

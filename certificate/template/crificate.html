@@ -1,12 +1,90 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+@font-face { font-family: Whipsmart; src: url({% static 'fonts/pdf.TTF' %}); }
+body {
+    font-family: Whipsmart;
+
+}
+
+.wrapper {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 1754px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    justify-content: space-around;
+}
+
+
+
+.logo, .textBlock,
+.organizationBlock {
+    position: relative;
+    z-index: 2;
+}
+
+
+.textBlock {
+    max-width: 900px;
+    height: 1100px;
+    margin-top: -40px;
+}
+
+
+.organizationBlock {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 1000px
+}
+
+.fullName {
+    margin-bottom: 80px;
+}
+
+.backgroundWrapper {
+    width: 100%;
+    height: 600px;
+    position: absolute;
+    z-index: 1;
+    margin-top: -400px;
+    background-color: rgb(204, 218, 249, 0.2);
+}
+
+.background {
+    background-size: cover;
+    background-position: center center;
+}
+
+.textBody {
+    color: rgb(10, 10, 10);
+    font-weight: 600;
+    margin-top: 30px;
+    font-size: 24px;
+}
+
+.userJobTitle {
+    font-size: 18px;
+}
+
+
+.organizationName {
+    color: rgb(76, 76, 196);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+</style>
 </head>
 <body>
-
 <div class="wrapper">
     {% for comp in components %}
         {%if comp.type.name == 'logo'%}
@@ -86,16 +164,14 @@
         </div >
 
         <div class="organizationBlock">
-            <p className={userJobTitle}>Директор по развитию</p>
-            <p className={s.userFullName}>Алёна Гейдт</p>
+            <p class="userJobTitle">Директор по развитию</p>
+            <p class="userFullName">Алёна Гейдт</p>
         </div>
         <div>
-            <p className={organizationName}>ИИ Навигатор</p>
-            <p className={Date}>июль 2022</p>
+            <p class="organizationName">ИИ Навигатор</p>
+            <p class="Date">июль 2022</p>
         </div>
 
     </div>
-
-
 </body>
 </html>
