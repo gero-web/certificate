@@ -13,19 +13,19 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 if not os.getenv('PROD', False):
     from dotenv import load_dotenv
+
     load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
 
 SECRET_KEY = os.environ['SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -41,9 +41,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
 
-
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -61,22 +59,22 @@ MIDDLEWARE = [
 # CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-   'http://localhost:3000',
-] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
+    'http://localhost:3000',
+]  # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
 CORS_ALLOWED_ORIGIN_REGEXES = [
-   'http://localhost:3000',
+    'http://localhost:3000',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 CORS_ALLOW_CREDENTIALS = True
 
-#CORS_ALLOWED_ORIGINS = [
- #   'http://localhost:3030',
-#] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
-#CORS_ALLOWED_ORIGIN_REGEXES = [
+# CORS_ALLOWED_ORIGINS = [
+#   'http://localhost:3030',
+# ] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
+# CORS_ALLOWED_ORIGIN_REGEXES = [
 #    'http://localhost:3030',
-#]
+# ]
 
 ROOT_URLCONF = 'certificate.urls'
 
@@ -86,7 +84,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser'
-     ),
+    ),
     'PAGE_SIZE': 20,
 }
 
@@ -105,7 +103,7 @@ SPECTACULAR_SETTINGS = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ os.path.join(BASE_DIR, 'template'), ],
+        'DIRS': [os.path.join(BASE_DIR, 'template'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,21 +125,22 @@ ALLOWED_HOSTS = ['*']
 
 
 DATABASES = {
-       'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ['DBNAME'],
-            'USER':  os.environ['DBUSER'],
-            'PASSWORD':  os.environ['DBPASS'],
-            'HOST':  os.environ['DBHOST'],
-            'PORT': os.environ['DBPORT'],
-            'ATOMIC_REQUESTS': True,
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DBNAME'],
+        'USER': os.environ['DBUSER'],
+        'PASSWORD': os.environ['DBPASS'],
+        'HOST': os.environ['DBHOST'],
+        'PORT': os.environ['DBPORT'],
+        'ATOMIC_REQUESTS': True,
+    }
 }
 
 
-EMAIL_HOST=os.environ['EMAIL_HOST']
-EMAIL_PORT=os.environ['EMAIL_PORT']
-EMAIL_HOST_USER= os.environ['EMAIL_HOST_USER']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
 
@@ -165,7 +164,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -177,13 +175,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
 STATICFILES_DIRS = [
-   os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static')
 ]
 
 # Default primary key field type

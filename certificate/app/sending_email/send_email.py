@@ -8,6 +8,6 @@ def send(certificate_key, to):
     if html is not None:
         subject = 'Certificate'
         from_email = settings.EMAIL_HOST_USER
-        msg = EmailMultiAlternatives(subject, "cadasd", from_email=from_email, to=to)
+        msg = EmailMultiAlternatives(subject,  from_email=from_email, to=to)
         msg.attach_alternative(html, "text/html")
         msg.send()
