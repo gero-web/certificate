@@ -31,7 +31,7 @@ class LayoutViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
-        queryset = Layout.objects.all().values_list('pk', 'layout_key').distinct('layout_key')
+        queryset = Layout.objects.all().values_list('layout_key').distinct('layout_key')
         queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
