@@ -1,7 +1,6 @@
 from app.models import Layout
 from rest_framework import serializers
 from .componentSerializers import ComponentSerializers
-from .certificateSerializers import CertificateSerializers
 
 
 class LayoutSerializer(serializers.ModelSerializer):
@@ -11,7 +10,6 @@ class LayoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Layout
         fields = (
-                    'layout_key',
-                    'component',
-                 )
-
+            'layout_key',
+            'component',
+        )
