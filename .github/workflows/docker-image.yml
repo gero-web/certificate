@@ -16,6 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build  ./certificate/Dockerfile  --tag  1t234tyio/back_certificate
+      run: docker build  -t  1t234tyio/back_certificate ./certificate/Dockerfile  
     
       
