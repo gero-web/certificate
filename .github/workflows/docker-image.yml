@@ -1,14 +1,17 @@
 name: Docker Image CI
 
+
+  
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+
 jobs:
 
-  build:
+ build:
 
     runs-on: ubuntu-latest
   
@@ -25,5 +28,13 @@ jobs:
       run: docker build  -t  1t234tyio/back_certificate  -f ./certificate/Dockerfile  .
     - name: Push Images 
       run:  docker push  1t234tyio/back_certificate
-    
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: ${{ secrets.PORT }}
+        script: touch ~/fi
+
       
