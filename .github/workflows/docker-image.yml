@@ -15,7 +15,15 @@ jobs:
   
     steps:
     - uses: actions/checkout@v3
+    - 
+        uses: docker/login-action@v2
+        with:
+          username: $DOCKERHUB.DOCKERHUB_USERNAME
+          password: $DOCKERHUB.DOCKERHUB_TOKEN
+          
     - name: Build the Docker image
       run: docker build  -t  1t234tyio/back_certificate  -f ./certificate/Dockerfile  .
+    - name: Push Images 
+      run:  docker push  1t234tyio/back_certificate
     
       
