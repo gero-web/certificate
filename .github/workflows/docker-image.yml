@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Login Docker hun
-      run: docker -u ${{ secrets.DOCKERHUB_USERNAME }} -p  ${{ secrets.DOCKERHUB_TOKEN }}
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p  ${{ secrets.DOCKERHUB_TOKEN }}
     
     - name: Build the Docker image
       run: docker build  -t  1t234tyio/back_certificate  -f ./certificate/Dockerfile  .
