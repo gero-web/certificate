@@ -8,6 +8,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update &&  pip install --upgrade pip 
 
 COPY ./requirements.txt /usr/src/app
+COPY ./manage.py /usr/src/app
 RUN pip install -r requirements.txt
 COPY . /usr/src/app
 
