@@ -11,6 +11,7 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http.response import JsonResponse
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from app.helpers.html_certificate import html_template_certificate
 import uuid
 
@@ -35,16 +36,18 @@ class CertificateViewsSet(ModelViewSet):
     )
 
     @extend_schema(
-        description='',
+        description='Возвращает список сертификатов!',
         responses={status.HTTP_200_OK: {'certificates': f'pk: {uuid.uuid4}'},
                    status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().values_list('pk', 'certificate_key')
-        return JsonResponse(data={'certificates': dict(queryset)})
+        queryset = Certificate.objects.all().values_list('certificate_key').distinct('certificate_key')
+        print(queryset)
+        return JsonResponse(data={'certificates': list(queryset)})
 
     @extend_schema(
         request=CertificateSerializers,
+        description='Не реализован и не должен проверятся на данный момент!',
         responses={status.HTTP_200_OK: CertificateSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
@@ -52,6 +55,7 @@ class CertificateViewsSet(ModelViewSet):
 
     @extend_schema(
         request=CertificateSerializers,
+        description='Возвращает конкретный сертификат виде html страницы, если сертификат не найдет вернет JSON',
         responses={status.HTTP_200_OK: CertificateSerializers,
                    status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
     )
@@ -65,6 +69,7 @@ class CertificateViewsSet(ModelViewSet):
 
     @extend_schema(
         request=ExcelSerializers,
+        description='Создает сертификат email необязательное',
         responses={status.HTTP_201_CREATED: uuid.uuid4(), status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
@@ -85,7 +90,11 @@ class CertificateViewsSet(ModelViewSet):
 
     @extend_schema(
         request=CertificateSerializers,
+        description='Удаляет сертификат по ключу сертификата ,если сертификата нет то выдает 404',
         responses={status.HTTP_204_NO_CONTENT: CertificateSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def destroy(self, request, *args, **kwargs):
-        return super(CertificateViewsSet, self).destroy(request, *args, **kwargs)
+        certificate_key = kwargs.get('certificate_key', None)
+        obj = get_object_or_404(Certificate, certificate_key = certificate_key)
+        obj.delete()
+        return JsonResponse(status=status.HTTP_204_NO_CONTENT, data={ 'msg': 'Ok!'})

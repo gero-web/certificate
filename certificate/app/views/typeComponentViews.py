@@ -29,6 +29,8 @@ class TypeComponentViewsSet(ModelViewSet):
 
     @extend_schema(
         request=TypeComponentSerializers,
+        description='Формат входных данных ввидет /type_component/1/ где 1 это  id  type_componet,\n \
+            число (обязательный) \n Параметры  передаются ввидет JSON  name: строка  \n',
         responses={status.HTTP_200_OK: TypeComponentSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
@@ -36,6 +38,7 @@ class TypeComponentViewsSet(ModelViewSet):
 
     @extend_schema(
         request=TypeComponentSerializers,
+        description='Формат входных данных ввидет /type_component/1/ где 1 это  id  type_componet, \n  Результат: Возвращает конкретныйtype_componet  \n',
         responses={status.HTTP_200_OK: TypeComponentSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def retrieve(self, request, *args, **kwargs):
@@ -43,6 +46,8 @@ class TypeComponentViewsSet(ModelViewSet):
 
     @extend_schema(
         request=TypeComponentSerializers,
+        description='Формат входных данных ввидет /type_component/1/ \
+        где 1 это  id  type_componet, \n передаются ввидет JSON  \n паоаметры: name: строка  \n',
         responses={status.HTTP_201_CREATED: TypeComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):

@@ -67,7 +67,7 @@ class ComponentSerializers(serializers.ModelSerializer):
         # or replace the name with your pricing name field
 
         return data
-
+   
     class Meta:
         model = Component
         fields = '__all__'
