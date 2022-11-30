@@ -14,7 +14,7 @@ router.register('certificate', CertificateViewsSet, basename='certificate')
 
 
 urlpatterns = [
-    path('api/', include((router.urls, 'app_name'), namespace='api')),
+    path('', include((router.urls, 'app_name'), namespace='api')),
     path('email/<slug:certificate_key>/', email,
             name='email')
 ]
