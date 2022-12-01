@@ -49,6 +49,10 @@ class LayoutViewsSet(ModelViewSet):
     )
     def update(self, request, *args, **kwargs):
         layout_key = kwargs.get('layout_key', None)
+        layout = Layout.objects.filter(layout_key = layout_key).exists()
+        if not layout:
+            return Response(data={'msg': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         serializer: LayoutSerializer = self.get_serializer(data=request.data)
         is_valid = serializer.is_valid(raise_exception=True)
         if is_valid:
@@ -101,6 +105,7 @@ class LayoutViewsSet(ModelViewSet):
     )
     def create(self, request, *args, **kwargs):
         serializer: LayoutSerializer = self.get_serializer(data=request.data)
+       
         is_valid = serializer.is_valid(raise_exception=True)
         if is_valid:
             components = request.data['component']
