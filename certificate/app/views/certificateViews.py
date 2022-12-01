@@ -54,9 +54,8 @@ class CertificateViewsSet(ModelViewSet):
         return super(CertificateViewsSet, self).update(request, *args, **kwargs)
 
     @extend_schema(
-        request=CertificateSerializers,
         description='Возвращает конкретный сертификат виде html страницы, если сертификат не найдет вернет JSON',
-        responses={status.HTTP_200_OK: CertificateSerializers,
+        responses={status.HTTP_200_OK:{},
                    status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
     )
     def retrieve(self, request, *args, **kwargs):
