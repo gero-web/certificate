@@ -5,6 +5,7 @@ from app.serializers.certificateSerializers import CertificateSerializers
 from app.serializers.exelserializer import ExcelSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
 from app.models import Certificate, Component
+from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
@@ -38,12 +39,19 @@ class CertificateViewsSet(ModelViewSet):
     @extend_schema(
         description='Возвращает список сертификатов!',
         responses={status.HTTP_200_OK: {'certificates': f'pk: {uuid.uuid4}'},
-                   status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+                  status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
-        queryset = Certificate.objects.all().values_list('certificate_key').distinct('certificate_key')
-        print(queryset)
-        return JsonResponse(data={'certificates': list(queryset)})
+        queryset = Certificate.objects.all().order_by('certificate_key').values_list('certificate_key')\
+        .distinct('certificate_key')
+        queryset = self.filter_queryset(queryset)
+      
+        page = self.paginate_queryset(queryset)
+       
+        if page is not None:
+             return JsonResponse(data={'certificates': page})
+       
+        return JsonResponse(data={'certificates': page })
 
     @extend_schema(
         request=CertificateSerializers,

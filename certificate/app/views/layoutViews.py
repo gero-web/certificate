@@ -1,4 +1,4 @@
-import json
+
 import uuid
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, JSONParser
@@ -29,17 +29,16 @@ class LayoutViewsSet(ModelViewSet):
     @extend_schema(
         request=LayoutSerializer,
         description='выводи все ключи layout',
-        responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+        responses={status.HTTP_200_OK: LayoutSerializer,  status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
         queryset = Layout.objects.all().values_list('layout_key').distinct('layout_key')
         queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            #  serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(json.dumps(page))
-        # serializer = self.get_serializer(filter, many=True)
-        return Response(json.dumps(page))
+            return self.get_paginated_response(page)
+      
+        return Response(page)
 
     @extend_schema(
         request=LayoutSerializer,
@@ -89,7 +88,7 @@ class LayoutViewsSet(ModelViewSet):
         queryset = Component.objects.filter(layout__layout_key=key).select_related()
 
         if not queryset:
-            return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
+            return Response('layout key not found', status=status.HTTP_404_NOT_FOUND)
 
         serializer = ComponentSerializers(data=queryset, many=True, context={"request": request})
         serializer.is_valid()
@@ -137,7 +136,7 @@ class LayoutViewsSet(ModelViewSet):
         queryset = Component.objects.filter(layout__layout_key=key).select_related()
 
         if not queryset:
-            return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
+            return Response('layout key not found', status=status.HTTP_404_NOT_FOUND)
         cetificate = queryset[0].certificate_set.all()
         cetificate.delete()
         queryset.delete()
