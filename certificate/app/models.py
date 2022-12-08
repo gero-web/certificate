@@ -33,6 +33,7 @@ class Component(models.Model):
     opacity = models.CharField(max_length=8, blank=True, null=True, default='1')
     text_align = models.CharField(max_length=24, blank=True, null=True, default='center')
     font_style = models.CharField(max_length=24, blank=True, null=True, default='normal')
+    text_decoration = models.CharField(max_length=24, blank=True, null=True, default=None)
 
     def __unicode__(self):
         return self.type.name

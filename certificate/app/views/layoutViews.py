@@ -1,4 +1,4 @@
-import json
+
 import uuid
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, JSONParser
@@ -11,7 +11,7 @@ from app.models import Layout
 from app.models import Component
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-
+from django.shortcuts import get_object_or_404
 
 class LayoutViewsSet(ModelViewSet):
     queryset = Layout.objects.all().order_by('pk')
@@ -28,36 +28,48 @@ class LayoutViewsSet(ModelViewSet):
 
     @extend_schema(
         request=LayoutSerializer,
-        responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+        description='выводи все ключи layout',
+        responses={status.HTTP_200_OK: LayoutSerializer,  status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):
         queryset = Layout.objects.all().values_list('layout_key').distinct('layout_key')
         queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            #  serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(json.dumps(page))
-        # serializer = self.get_serializer(filter, many=True)
-        return Response(json.dumps(page))
+            return self.get_paginated_response(page)
+      
+        return Response(page)
 
     @extend_schema(
         request=LayoutSerializer,
+        description='При обновление  layout , создаются component  если не указан id и сылется на него, елсли id указан то обновляет компонет \n \
+             должен быть создан зарание \n id  идентификатор компонента тип данных число ',
         responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
         layout_key = kwargs.get('layout_key', None)
+        layout = Layout.objects.filter(layout_key = layout_key).exists()
+        if not layout:
+            return Response(data={'msg': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         serializer: LayoutSerializer = self.get_serializer(data=request.data)
         is_valid = serializer.is_valid(raise_exception=True)
         if is_valid:
             components = request.data['component']
             if not components:
                 return Response(data={'msg': 'Components empty'}, status=status.HTTP_400_BAD_REQUEST)
-            allSerializesComponents = [ComponentSerializers(data=component) for component in components]
-            is_allValidComponent = all([comp.is_valid() for comp in allSerializesComponents])
+            allSerializesComponents = [(component.get('id',None), ComponentSerializers(data=component)) for component in components]
+            is_allValidComponent = all([comp[1].is_valid() for comp in allSerializesComponents])
             if is_allValidComponent:
-                saved_component = [comp.save() for comp in allSerializesComponents]
-                for comp in saved_component:
-                    Layout.objects.create(component=comp, layout_key=layout_key)
+               
+                for id,comp in allSerializesComponents:
+                      if id:
+                          obj = get_object_or_404( Component, pk = id)
+                          if obj:
+                            comp.update(obj, comp.validated_data)
+                      else:
+                            obj = comp.save()
+                            Layout.objects.create(component=obj, layout_key=layout_key)
             else:
                 return Response(data={'msg': 'Component is not valid'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -68,6 +80,7 @@ class LayoutViewsSet(ModelViewSet):
 
     @extend_schema(
         request=LayoutSerializer,
+        description='При получение  layout необходимо передать layout_key,\n возвращает список component связанных с этим layout ',
         responses={status.HTTP_200_OK: LayoutSerializer, status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
     )
     def retrieve(self, request, *args, **kwargs):
@@ -75,7 +88,7 @@ class LayoutViewsSet(ModelViewSet):
         queryset = Component.objects.filter(layout__layout_key=key).select_related()
 
         if not queryset:
-            return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
+            return Response('layout key not found', status=status.HTTP_404_NOT_FOUND)
 
         serializer = ComponentSerializers(data=queryset, many=True, context={"request": request})
         serializer.is_valid()
@@ -84,10 +97,14 @@ class LayoutViewsSet(ModelViewSet):
 
     @extend_schema(
         request=LayoutSerializer,
+         description='При создание  layout , создаются components формат json  и является списком который содержит component - ы  \n \
+             поле image  работает с двумя типами данных \n 1. base64 \n 2. url картинки \n  type -- это id type_componet , type_comonent \n \
+             должен быть создан зарание',
         responses={status.HTTP_201_CREATED: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
         serializer: LayoutSerializer = self.get_serializer(data=request.data)
+       
         is_valid = serializer.is_valid(raise_exception=True)
         if is_valid:
             components = request.data['component']
@@ -110,6 +127,8 @@ class LayoutViewsSet(ModelViewSet):
 
     @extend_schema(
         request=LayoutSerializer,
+        description='При удаление  layout  удалеются все компонеты свзязанные с этим layout и \n  \
+            certificate',
         responses={status.HTTP_204_NO_CONTENT: LayoutSerializer, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def destroy(self, request, *args, **kwargs):
@@ -117,9 +136,9 @@ class LayoutViewsSet(ModelViewSet):
         queryset = Component.objects.filter(layout__layout_key=key).select_related()
 
         if not queryset:
-            return Response(json.dumps('layout key not found'), status=status.HTTP_404_NOT_FOUND)
+            return Response('layout key not found', status=status.HTTP_404_NOT_FOUND)
         cetificate = queryset[0].certificate_set.all()
         cetificate.delete()
         queryset.delete()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
