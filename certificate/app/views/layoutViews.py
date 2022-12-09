@@ -1,4 +1,3 @@
-
 import uuid
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, JSONParser
@@ -9,9 +8,11 @@ from app.serializers.invalidSerializers import InvalidSerializer
 from app.serializers.componentSerializers import ComponentSerializers
 from app.models import Layout
 from app.models import Component
+from app.models import TypeComponent
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+
 
 class LayoutViewsSet(ModelViewSet):
     queryset = Layout.objects.all().order_by('pk')
@@ -103,8 +104,14 @@ class LayoutViewsSet(ModelViewSet):
         responses={status.HTTP_201_CREATED: LayoutSerializer, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
+        type = TypeComponent.objects.all()
+        if not type:
+            TypeComponent.objects.create(name='image')
+            TypeComponent.objects.create(name='background')
+            TypeComponent.objects.create(name='text')
+            TypeComponent.objects.create(name='mainBackground')
+
         serializer: LayoutSerializer = self.get_serializer(data=request.data)
-       
         is_valid = serializer.is_valid(raise_exception=True)
         if is_valid:
             components = request.data['component']
