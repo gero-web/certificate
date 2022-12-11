@@ -6,6 +6,7 @@ from app.models import TypeComponent
 from app.serializers.invalidSerializers import InvalidSerializer
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
+from rest_framework.permissions import IsAuthenticated
 
 
 class TypeComponentViewsSet(ModelViewSet):
@@ -13,6 +14,7 @@ class TypeComponentViewsSet(ModelViewSet):
     serializer_class = TypeComponentSerializers
     permission_classes = [
         permissions.AllowAny,
+        IsAuthenticated
     ]
 
     parser_classes = (
