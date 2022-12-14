@@ -15,6 +15,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from app.helpers.html_certificate import html_template_certificate
 import uuid
+from app.serializers.componentSerializers import ComponentSerializers
 
 
 class CertificateViewsSet(ModelViewSet):
@@ -32,8 +33,9 @@ class CertificateViewsSet(ModelViewSet):
     )
 
     renderer_classes = (
-        TemplateHTMLRenderer,
+
         JSONRenderer,
+        TemplateHTMLRenderer,
     )
 
     @extend_schema(
@@ -51,7 +53,7 @@ class CertificateViewsSet(ModelViewSet):
         if page is not None:
              return JsonResponse(data={'certificates': page})
        
-        return JsonResponse(data={'certificates': page })
+        return JsonResponse(data={'certificates': page})
 
     @extend_schema(
         request=CertificateSerializers,
@@ -62,17 +64,21 @@ class CertificateViewsSet(ModelViewSet):
         return super(CertificateViewsSet, self).update(request, *args, **kwargs)
 
     @extend_schema(
+        # request=CertificateSerializers,
         description='Возвращает конкретный сертификат виде html страницы, если сертификат не найдет вернет JSON',
-        responses={status.HTTP_200_OK:{},
+        responses={status.HTTP_200_OK: {},
                    status.HTTP_500_INTERNAL_SERVER_ERROR: InvalidSerializer},
     )
     def retrieve(self, request, *args, **kwargs):
         certificate_key = kwargs['certificate_key']
-        template = html_template_certificate(certificate_key)
-        if template is None:
-            return JsonResponse(data={'msg': 'certificate not found'}, status=status.HTTP_404_NOT_FOUND)
+        queryset = Component.objects.filter(certificate__certificate_key=certificate_key).select_related()
+        if not queryset:
+            return Response('certificate key not found', status=status.HTTP_404_NOT_FOUND)
+        serializer = ComponentSerializers(data=queryset, many=True, context={"request": request})
+        serializer.is_valid()
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
-        return HttpResponse(template)
 
     @extend_schema(
         request=ExcelSerializers,
@@ -80,18 +86,41 @@ class CertificateViewsSet(ModelViewSet):
         responses={status.HTTP_201_CREATED: uuid.uuid4(), status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
+        k = []
         exelSerializer = ExcelSerializers(data=request.data)
         if exelSerializer.is_valid():
             components = Component.objects.filter(layout__layout_key=exelSerializer.data['layout_key'])
-            email = exelSerializer.data['email']
+            exel = exelSerializer.data['exel']
             if components:
-                if email:
-                    cer = Certificate.objects.create(certificate_key=uuid.uuid4(), email=email)
-                else:
-                    cer = Certificate.objects.create(certificate_key=uuid.uuid4())
-                for component in components:
-                    cer.components.add(component)
-                return JsonResponse({'certificate_key': cer.certificate_key}, status=status.HTTP_201_CREATED)
+                if exel:
+                    for e in range(len(exel)):
+                        if exel[e].get("email"):
+                            cer = Certificate.objects.create(certificate_key=uuid.uuid4(), email=exel[e].get("email"))
+                        else:
+                            cer = Certificate.objects.create(certificate_key=uuid.uuid4())
+                        k.append(cer.certificate_key)
+                        for component in components:
+                            if component.anchor_number:
+                                new_component = component
+                                new_component.text = exel[e].get(component.anchor_number)
+                                new_comp = Component.objects.create(type=new_component.type, color=new_component.color,
+                                                                    font=new_component.font,
+                                                                    font_size=new_component.font_size,
+                                                                    font_weight=new_component.font_weight,
+                                                                    x=new_component.x, y=new_component.y,
+                                                                    width=new_component.width,
+                                                                    height=new_component.height,
+                                                                    text=new_component.text,
+                                                                    image=new_component.image,
+                                                                    opacity=new_component.opacity,
+                                                                    text_align=new_component.text_align,
+                                                                    font_style=new_component.font_style,
+                                                                    text_decoration=new_component.text_decoration,
+                                                                    anchor_number=new_component.anchor_number)
+                                cer.components.add(new_comp)
+                            else:
+                                cer.components.add(component)
+                return JsonResponse({'certificate_key': k}, status=status.HTTP_201_CREATED)
 
         return JsonResponse(data={'msg': 'layout not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -102,6 +131,6 @@ class CertificateViewsSet(ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         certificate_key = kwargs.get('certificate_key', None)
-        obj = get_object_or_404(Certificate, certificate_key = certificate_key)
+        obj = get_object_or_404(Certificate, certificate_key=certificate_key)
         obj.delete()
         return JsonResponse(status=status.HTTP_204_NO_CONTENT, data={ 'msg': 'Ok!'})

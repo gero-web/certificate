@@ -34,6 +34,7 @@ class Component(models.Model):
     text_align = models.CharField(max_length=24, blank=True, null=True, default='center')
     font_style = models.CharField(max_length=24, blank=True, null=True, default='normal')
     text_decoration = models.CharField(max_length=24, blank=True, null=True, default=None)
+    anchor_number = models.CharField(max_length=8, blank=True, null=True, default=None)
 
     def __unicode__(self):
         return self.type.name
@@ -48,3 +49,4 @@ class Certificate(models.Model):
     certificate_key = models.SlugField()
     components = models.ManyToManyField(Component)
     email = models.EmailField(blank=True, null=True, default='123@laifr.ru')
+    exel = models.JSONField(blank=True, null=True, default=None)
