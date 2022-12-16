@@ -6,6 +6,10 @@ from app.models import TypeComponent
 from app.serializers.invalidSerializers import InvalidSerializer
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+from app.helpers.delete_cache import del_cache
 
 
 class TypeComponentViewsSet(ModelViewSet):
@@ -15,10 +19,18 @@ class TypeComponentViewsSet(ModelViewSet):
         permissions.AllowAny,
     ]
 
+    http_method_names = ["get", "post", "patch", "delete"]
     parser_classes = (
         JSONParser,
     )
 
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*6,key_prefix='type_component_key'))
+    def dispatch(self, request, *args, **kwargs):
+        
+        return super().dispatch(request, *args, **kwargs)
+    
+    
     @extend_schema(
         request=TypeComponentSerializers,
         responses={status.HTTP_200_OK: TypeComponentSerializers,
@@ -34,6 +46,7 @@ class TypeComponentViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: TypeComponentSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
+        del_cache('type_component_key')
         return super(TypeComponentViewsSet, self).update(request, *args, **kwargs)
 
     @extend_schema(
@@ -51,6 +64,7 @@ class TypeComponentViewsSet(ModelViewSet):
         responses={status.HTTP_201_CREATED: TypeComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
+        del_cache('type_component_key')
         return super().create(request, *args, **kwargs)
 
     @extend_schema(
@@ -58,4 +72,5 @@ class TypeComponentViewsSet(ModelViewSet):
         responses={status.HTTP_204_NO_CONTENT: TypeComponentSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def destroy(self, request, *args, **kwargs):
+        del_cache('type_component_key')
         return super(TypeComponentViewsSet, self).destroy(request, *args, **kwargs)

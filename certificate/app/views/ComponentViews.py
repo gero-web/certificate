@@ -6,6 +6,10 @@ from app.serializers.invalidSerializers import InvalidSerializer
 from app.models import Component
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+from app.helpers.delete_cache import del_cache
 
 
 class ComponentViewsSet(ModelViewSet):
@@ -22,12 +26,18 @@ class ComponentViewsSet(ModelViewSet):
         JSONParser,
     )
 
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*6,key_prefix='component_key'))
+    def dispatch(self, request, *args, **kwargs):
+        
+        return super().dispatch(request, *args, **kwargs)
+    
     @extend_schema(
         request=ComponentSerializers,
-        description=' ВВозвращает все компоненты',
+        description=' Возвращает все компоненты',
         responses={status.HTTP_200_OK: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs): 
         return super(ComponentViewsSet, self).list(request, *args, **kwargs)
 
     @extend_schema(
@@ -36,6 +46,7 @@ class ComponentViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
+        del_cache('component_key')
         return super(ComponentViewsSet, self).update(request, *args, **kwargs)
 
     @extend_schema(
@@ -54,7 +65,7 @@ class ComponentViewsSet(ModelViewSet):
         responses={status.HTTP_201_CREATED: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def create(self, request, *args, **kwargs):
-        print(request)
+        del_cache('component_key')
         return super().create(request, *args, **kwargs)
 
     @extend_schema(
@@ -62,6 +73,6 @@ class ComponentViewsSet(ModelViewSet):
         responses={status.HTTP_204_NO_CONTENT: ComponentSerializers, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     )
     def destroy(self, request, *args, **kwargs):
-
+        del_cache('component_key')
         return super(ComponentViewsSet, self).destroy(request, *args, **kwargs)
 

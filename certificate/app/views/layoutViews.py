@@ -12,6 +12,10 @@ from app.models import TypeComponent
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+from app.helpers.delete_cache import del_cache
 
 
 class LayoutViewsSet(ModelViewSet):
@@ -27,6 +31,12 @@ class LayoutViewsSet(ModelViewSet):
         MultiPartParser,
     )
 
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*6,key_prefix='layout_key'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
+        
     @extend_schema(
         request=LayoutSerializer,
         description='выводи все ключи layout',
@@ -76,7 +86,7 @@ class LayoutViewsSet(ModelViewSet):
         else:
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        del_cache('layout_key')
         return Response(data={'layout_key': layout_key}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -129,7 +139,7 @@ class LayoutViewsSet(ModelViewSet):
         else:
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        del_cache('layout_key')
         return Response(data={'layout_key': layout_key}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -147,5 +157,5 @@ class LayoutViewsSet(ModelViewSet):
         cetificate = queryset[0].certificate_set.all()
         cetificate.delete()
         queryset.delete()
-
+        del_cache('layout_key')
         return Response(status=status.HTTP_204_NO_CONTENT)

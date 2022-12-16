@@ -9,14 +9,14 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http.response import JsonResponse
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from app.helpers.html_certificate import html_template_certificate
-import uuid
 from app.serializers.componentSerializers import ComponentSerializers
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+from app.helpers.delete_cache import del_cache
+import uuid
 
 class CertificateViewsSet(ModelViewSet):
     queryset = Certificate.objects.all().order_by('pk')
@@ -38,6 +38,12 @@ class CertificateViewsSet(ModelViewSet):
         TemplateHTMLRenderer,
     )
 
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*6,key_prefix='certificate_key'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     @extend_schema(
         description='Возвращает список сертификатов!',
         responses={status.HTTP_200_OK: {'certificates': f'pk: {uuid.uuid4}'},
@@ -61,6 +67,7 @@ class CertificateViewsSet(ModelViewSet):
         responses={status.HTTP_200_OK: CertificateSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def update(self, request, *args, **kwargs):
+        del_cache('certificate_key')
         return super(CertificateViewsSet, self).update(request, *args, **kwargs)
 
     @extend_schema(
@@ -89,7 +96,7 @@ class CertificateViewsSet(ModelViewSet):
         k = []
         exelSerializer = ExcelSerializers(data=request.data)
         if exelSerializer.is_valid():
-            components = Component.objects.filter(layout__layout_key=exelSerializer.data['layout_key'])
+            components = Component.objects.filter(layout__certificate_key=exelSerializer.data['certificate_key'])
             exel = exelSerializer.data['exel']
             if components:
                 if exel:
@@ -120,6 +127,7 @@ class CertificateViewsSet(ModelViewSet):
                                 cer.components.add(new_comp)
                             else:
                                 cer.components.add(component)
+                del_cache('certificate_key')                
                 return JsonResponse({'certificate_key': k}, status=status.HTTP_201_CREATED)
 
         return JsonResponse(data={'msg': 'layout not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -133,4 +141,5 @@ class CertificateViewsSet(ModelViewSet):
         certificate_key = kwargs.get('certificate_key', None)
         obj = get_object_or_404(Certificate, certificate_key=certificate_key)
         obj.delete()
+        del_cache('certificate_key')
         return JsonResponse(status=status.HTTP_204_NO_CONTENT, data={ 'msg': 'Ok!'})
