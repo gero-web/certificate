@@ -2,9 +2,11 @@ from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.viewsets import ModelViewSet
 from app.serializers.certificateSerializers import CertificateSerializers
+from app.serializers.tagSerializers import TagSerializer
 from app.serializers.exelserializer import ExcelSerializers
 from app.serializers.invalidSerializers import InvalidSerializer
 from app.models import Certificate, Component
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -62,6 +64,28 @@ class CertificateViewsSet(ModelViewSet):
     )
     def update(self, request, *args, **kwargs):
         return super(CertificateViewsSet, self).update(request, *args, **kwargs)
+    
+    
+    @extend_schema(
+        request=TagSerializer,
+        description='Не реализован и не должен проверятся на данный момент!',
+        responses={status.HTTP_200_OK: CertificateSerializers , status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+    )
+    @action(detail=False, methods=['POST'], 
+            url_path='get_all_certificate',
+            url_name='get_all_certificate')
+    
+    def get_all_certificate(self,req):
+        tag = TagSerializer(data = req.data)
+        tag.is_valid()
+        if( tag.is_valid()):
+            keys = [Certificate.objects.filter(certificate_key = key['certificate_key']).first() for key in tag.data['certificate_keys']]
+            if(all(keys)):
+                certificates = CertificateSerializers(data=keys, many=True)
+                certificates.is_valid()
+                return Response(certificates.data,  status=status.HTTP_200_OK)
+            
+        return Response({'msg': 'один или несколько certificate_key не найден'},  status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         # request=CertificateSerializers,
@@ -88,8 +112,11 @@ class CertificateViewsSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         k = []
         exelSerializer = ExcelSerializers(data=request.data)
+        print(exelSerializer.is_valid())
+        print(exelSerializer.data)
         if exelSerializer.is_valid():
             components = Component.objects.filter(layout__layout_key=exelSerializer.data['layout_key'])
+           
             exel = exelSerializer.data['exel']
             if components:
                 if exel:
