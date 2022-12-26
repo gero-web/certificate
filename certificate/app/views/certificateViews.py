@@ -68,7 +68,7 @@ class CertificateViewsSet(ModelViewSet):
     
     @extend_schema(
         request=TagSerializer,
-        description='Не реализован и не должен проверятся на данный момент!',
+        description='Возвращает список сертификатов !',
         responses={status.HTTP_200_OK: CertificateSerializers , status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     @action(detail=False, methods=['POST'], 
