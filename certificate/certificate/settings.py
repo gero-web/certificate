@@ -19,7 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 if not os.getenv('PROD', False):
     from dotenv import load_dotenv
-
     load_dotenv(os.path.join(BASE_DIR, 'setting.env'))
 
 SECRET_KEY = os.environ['SECRET']
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+   
 
 ]
 

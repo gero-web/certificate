@@ -1,15 +1,21 @@
-
+{% load static%}
 <html lang="ru">
 <head>
-
-     <meta  charset=utf-8">
-<style>
-
+     
+     <meta  charset="utf-8">
+<style type="text/css">
+@font-face { font-family: Impact; src: url({{static}}); }
+* {
+    font-family: 'Times New Roman', Times, serif;
+}
+@page {
+    size: A4;
+    margin: 0mm;
+}
 
 .wrapper {
     background-color: #FFFFFF;
-    width: 100%;
-    height: 1754px;
+   
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -29,8 +35,8 @@
 
 .textBlock {
     max-width: 900px;
-    height: 1100px;
-    margin-top: -40px;
+     
+    margin-top: 15%;
 }
 
 
@@ -39,7 +45,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    width: 1000px
+    width: 1000px;
 }
 
 .fullName {
@@ -47,17 +53,20 @@
 }
 
 .backgroundWrapper {
-    width: 100%;
-    height: 600px;
-    position: absolute;
+   
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     z-index: 1;
-    margin-top: -400px;
-    background-color: rgb(204, 218, 249, 0.2);
+    width: 10000px;
+   
+    background-color: rgb(204, 218, 249, 0.4) !important;
 }
 
 .background {
     background-size: cover;
-    background-position: center center;
+   
 }
 
 .textBody {
@@ -71,13 +80,22 @@
     font-size: 18px;
 }
 
-
+.footer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+   
+}
 .organizationName {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
     color: rgb(76, 76, 196);
-    font-weight: 600;
+    
     font-size: 18px;
 }
-
 </style>
 </head>
 <body>
@@ -87,7 +105,7 @@
         {%if comp.type.name == 'logo'%}
                 <img class="logo" style="width:{{comp.width}};
                             margin-top:{{comp.x}};"
-                     src="{{comp.image.url}}"
+                     src="{{SITE_URL}}{{comp.image.url}}"
                 />
         {%endif%}
             {%if comp.type.name == 'background'%}
@@ -97,7 +115,7 @@
                                 height:{{comp.height}};
                                 opacity:{{comp.opacity}};"
 
-                         src="{{comp.image.url}}"
+                         src="{{SITE_URL}}{{comp.image.url}}"
                     />
                 </div>
             {%endif%}
@@ -108,8 +126,8 @@
 
                         {%if comp.type.name == 'certificateType'%}
                             <h1  style="
-                                                color:{{comp.color}};
-                                                font-size:{{comp.font_size}};
+                                         color:{{comp.color}};
+                                         font-size:{{comp.font_size}};
                                                 font-weight:{{comp.font_weight}};"
                                     >
                                         {{comp.text}}  </h1>
@@ -160,11 +178,11 @@
             {%endfor%}
         </div>
         <div class="organizationBlock">
-            <p class="userJobTitle">Директор по развитиюlfsdfdsfsf</p>
+            <p class="userJobTitle">Директор по развитию</p>
             <p class="userFullName">Алёна Гейдт</p>
         </div>
-        <div>
-            <p class="organizationName">ИИ ds  ыы ьтьт  dsad фвфыв Навигатор</p>
+        <div class="footer">
+            <p class="organizationName">ИИ  Навигатор</p>
             <p class="Date">июль 2022</p>
         </div>
 

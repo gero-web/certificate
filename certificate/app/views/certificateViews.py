@@ -16,8 +16,8 @@ from django.http.response import JsonResponse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from app.helpers.html_certificate import html_template_certificate
-import uuid
 from app.serializers.componentSerializers import ComponentSerializers
+import uuid
 
 
 class CertificateViewsSet(ModelViewSet):
