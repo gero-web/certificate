@@ -24,7 +24,7 @@ class ComponentViewsSet(ModelViewSet):
 
     @extend_schema(
         request=ComponentSerializers,
-        description=' ВВозвращает все компоненты',
+        description=' Возвращает все компоненты',
         responses={status.HTTP_200_OK: ComponentSerializers, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     )
     def list(self, request, *args, **kwargs):

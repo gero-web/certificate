@@ -18,13 +18,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include, re_path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-from app.views.pdf_creator import render_to_pdf,htmlr
+from app.views.pdf_creator import render_to_pdf
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('app.urls')),
-    path('api/to_pdf/<slug:certificate_key>', render_to_pdf, name='to_pdf' ),
-    path('htmlr/<slug:certificate_key>', htmlr, name='htmlr' ),
+    path('api/to_pdf/', render_to_pdf, name='to_pdf' ),
    
     # swagger
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
