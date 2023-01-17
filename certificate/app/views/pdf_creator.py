@@ -27,13 +27,16 @@ import json
 def render_to_pdf(req):
     req_file =  PdfGeneratorImageSerializers(data=req.data)
     if req_file.is_valid(): 
-        for data in  req_file.data['image']:
-            file = base64.b64decode(data.split('base64,')[1])
-            file = io.BytesIO(file)  
         letter = (mm_to_pt(210), mm_to_pt(297)) # A4
         # letter = (mm_to_pt(420), mm_to_pt(297)) # A3
         layout = get_layout_fun(letter)
-        pdf = convert(file, layout_fun = layout)
+        lst_img = []
+        for data in  req_file.data['image']:
+            file = base64.b64decode(data.split('base64,')[1])
+            file = io.BytesIO(file)  
+            lst_img.append(file)
+      
+        pdf = convert(lst_img, layout_fun = layout)
        
         response = HttpResponse(pdf, content_type='application/pdf')
        # response['Content-Disposition'] = 'attachment; filename=certificate'  
