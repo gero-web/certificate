@@ -11,8 +11,8 @@ from img2pdf import convert, mm_to_pt, get_layout_fun
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from app.serializers.pdfGeneratorImageSerializers import PdfGeneratorImageSerializers
+from app.sending_email.send_email import send_pdf
 import base64,io
-import json
 
 
 
@@ -37,9 +37,10 @@ def render_to_pdf(req):
             lst_img.append(file)
       
         pdf = convert(lst_img, layout_fun = layout)
-       
+        to = ['sergeq198@gmail.com']
+        send_pdf(pdf, to )
         response = HttpResponse(pdf, content_type='application/pdf')
-       # response['Content-Disposition'] = 'attachment; filename=certificate'  
+        response['Content-Disposition'] = 'attachment; filename=certificate'  
         return response
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)
