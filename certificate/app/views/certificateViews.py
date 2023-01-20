@@ -76,32 +76,33 @@ class CertificateViewsSet(ModelViewSet):
             url_name='get_all_certificate')
     
     def get_all_certificate(self, req):
-        tag = TagSerializer(data=req.data)
-        tag.is_valid()
-        data = []
-        if(tag.is_valid()):
-            keys = tag.data.get('certificate_keys')
-            for key in keys:
-                queryset = Component.objects.filter(certificate__certificate_key=key).select_related()
-                if not queryset:
-                    return Response('certificate key not found', status=status.HTTP_404_NOT_FOUND)
-                serializer = ComponentSerializers(data=queryset, many=True, context={"request": req})
-                serializer.is_valid()
-                data.append(serializer.data)
+       tag = TagSerializer(data=req.data)
+       tag.is_valid()
+       data = []
+       if(tag.is_valid()):
+           keys = tag.data.get('certificate_keys')
+           for key in keys:
+               queryset = Component.objects.filter(certificate__certificate_key=key).select_related()
+               if not queryset:
+                   return Response('certificate key not found', status=status.HTTP_404_NOT_FOUND)
+               serializer = ComponentSerializers(data=queryset, many=True, context={"request": req})
+               serializer.is_valid()
+               data.append(serializer.data)
 
-            return Response(data, status=status.HTTP_200_OK)
+           return Response(data, status=status.HTTP_200_OK)
+       return Response('certificate key not found', status=status.HTTP_404_NOT_FOUND)
     
-#     def get_all_certificate(self,req):
-#         tag = TagSerializer(data = req.data)
-#         tag.is_valid()
-#         if( tag.is_valid()):
-#             keys = [Certificate.objects.filter(certificate_key = key['certificate_key']).first() for key in tag.data['certificate_keys']]
-#             if(all(keys)):
-#                 certificates = CertificateSerializers(data=keys, many=True)
-#                 certificates.is_valid()
-#                 return Response(certificates.data,  status=status.HTTP_200_OK)
+    # def get_all_certificate(self,req):
+    #     tag = TagSerializer(data = req.data)
+    #     tag.is_valid()
+    #     if( tag.is_valid()):
+    #         keys = [Certificate.objects.filter(certificate_key = key['certificate_key']).first() for key in tag.data['certificate_keys']]
+    #         if(all(keys)):
+    #             certificates = CertificateSerializers(data=keys, many=True)
+    #             certificates.is_valid()
+    #             return Response(certificates.data,  status=status.HTTP_200_OK)
             
-#         return Response({'msg': 'один или несколько certificate_key не найден'},  status=status.HTTP_400_BAD_REQUEST)
+    #     return Response({'msg': 'один или несколько certificate_key не найден'},  status=status.HTTP_400_BAD_REQUEST)
 
 
     @extend_schema(
