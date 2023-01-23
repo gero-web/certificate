@@ -50,3 +50,10 @@ class Certificate(models.Model):
     components = models.ManyToManyField(Component)
     email = models.EmailField(blank=True, null=True, default='123@laifr.ru')
     exel = models.JSONField(blank=True, null=True, default=None)
+
+
+class PdfCertificate(models.Model):
+    path = models.FileField(upload_to='pdf/')
+    email = models.EmailField()
+    key = models.SlugField(unique=True)
+    
