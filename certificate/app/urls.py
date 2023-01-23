@@ -20,6 +20,6 @@ urlpatterns = [
     path('', include((router.urls, 'app_name'), namespace='api')),
     path('save_pdf/', render_to_pdf, name='save_pdf' ),
     path('get_pdf/', get_pdf, name='get_pdf' ),
-    path('pdf_sendEmail/', render_to_pdf_email, name='to_pdf' ),
+    path('pdf_sendEmail/', render_to_pdf_email, name='pdf_sendEmail' ),
     path('email/<slug:certificate_key>/', email,name='email'),
 ]
