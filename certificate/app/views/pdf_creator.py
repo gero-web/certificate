@@ -31,9 +31,9 @@ def render_pdf(img):
 
 
 @extend_schema(
-    request = PdfGeneratorImageSerializers,
+    request = PdfEmailKeysSerializers,
     responses={status.HTTP_200_OK: {'msg': 'sent'}, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
-    description='Создает 1 pdf из картинки и отправляет "!'
+    description='отправляет сылку которая должна вести на фронт"!'
 )
 @api_view(['POST'])
 @renderer_classes([JSONRenderer])
@@ -44,7 +44,6 @@ def render_to_pdf_email(req):
         lst_exp = []
         for key in req_file.data['keys']:
             pdf_cert = PdfCertificate.objects.filter(key=key).first()
-            print(pdf_cert)
             if pdf_cert:
                 print(key)
                 msg = html_url_certificate(pdf_cert.key)
@@ -59,8 +58,8 @@ def render_to_pdf_email(req):
    
 
 @extend_schema(
-    request = PdfGeneratorImageSerializers,
-    responses={status.HTTP_200_OK: {'msg': 'sent'}, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+    request = PdfGetCertificate,
+    responses={status.HTTP_200_OK: {'msg': 'sent'}, status.HTTP_404_NOT_FOUND: InvalidSerializer},
     description='Отдает сертификат виде pdf "!'
 )
 @api_view(['POST'])
