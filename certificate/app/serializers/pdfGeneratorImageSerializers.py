@@ -9,6 +9,8 @@ class PdfEmailKeysSerializers(serializers.Serializer):
 class PdfGetCertificate(serializers.Serializer):
     key = serializers.JSONField()
 
+class PdfOne_img_one_pdf(serializers.Serializer):
+    image = serializers.JSONField()
 
 class PdfGeneratorImageSerializers(serializers.Serializer):
     key = serializers.JSONField()
