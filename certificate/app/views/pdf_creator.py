@@ -12,7 +12,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from django.http.response import JsonResponse
 from app.serializers.pdfGeneratorImageSerializers import PdfGeneratorImageSerializers,PdfGetCertificate, \
-PdfEmailKeysSerializers
+PdfEmailKeysSerializers, PdfOne_img_one_pdf
 from app.sending_email.send_email import send_url
 from app.helpers.html_certificate import html_url_certificate
 from django.core.files.base import ContentFile
@@ -72,7 +72,7 @@ def get_pdf(req):
         
         b64 = base64.b64encode(pdf_cert.path.read())
         encoded_str = b64.decode('utf-8')
-        return JsonResponse({ 'pdf': encoded_str}, status = status.HTTP_200_OK)
+        return JsonResponse({ 'pdf': "data:application/pdf;base64,"+ encoded_str}, status = status.HTTP_200_OK)
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)    
 
@@ -93,5 +93,25 @@ def render_to_pdf(req):
             p.path = ContentFile(pdf, name=data['key'] + '.pdf')
             p.save()  
         return JsonResponse(data= {'msg':'ok'}, status=status.HTTP_200_OK)
+    else:
+         return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)       
+     
+     
+     
+@extend_schema(
+    request = PdfGeneratorImageSerializers,
+    responses={status.HTTP_200_OK: {'msg': 'sent'}, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
+    description='Создает 1 pdf из картинки "!'
+)
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+@parser_classes([JSONParser])
+def one_image_one_pdf(req):
+    req_file =  PdfOne_img_one_pdf(data=req.data)
+    if req_file.is_valid(): 
+        pdf = render_pdf(req_file.data['image'])
+        b64 = base64.b64encode(pdf)
+        encoded_str = b64.decode('utf-8')
+        return JsonResponse({ 'pdf': "data:application/pdf;base64,"+ encoded_str}, status = status.HTTP_200_OK)
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)       
