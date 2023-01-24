@@ -110,8 +110,10 @@ def one_image_one_pdf(req):
     req_file =  PdfOne_img_one_pdf(data=req.data)
     if req_file.is_valid(): 
         pdf = render_pdf(req_file.data['image'])
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=certificate'  
+        #response = HttpResponse(pdf, content_type='application/pdf')
+       # response['Content-Disposition'] = 'attachment; filename=certificate'  
+        response = FileResponse(pdf)
+        
         return response
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)       
