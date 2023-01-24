@@ -69,9 +69,10 @@ def get_pdf(req):
     req_file =  PdfGetCertificate(data=req.data )
     if req_file.is_valid(): 
         pdf_cert = get_object_or_404(PdfCertificate, key=req_file.data['key'])
-        response = HttpResponse(pdf_cert.path, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=certificate'  
-        return response
+        
+        b64 = base64.b64encode(pdf_cert.path.read())
+        encoded_str = b64.decode('utf-8')
+        return JsonResponse({ 'pdf': encoded_str}, status = status.HTTP_200_OK)
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)    
 
