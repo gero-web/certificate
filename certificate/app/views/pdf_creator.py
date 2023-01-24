@@ -110,8 +110,8 @@ def one_image_one_pdf(req):
     req_file =  PdfOne_img_one_pdf(data=req.data)
     if req_file.is_valid(): 
         pdf = render_pdf(req_file.data['image'])
-        b64 = base64.b64encode(pdf)
-        encoded_str = b64.decode('utf-8')
-        return JsonResponse({ 'pdf': "data:application/pdf;base64,"+ encoded_str}, status = status.HTTP_200_OK)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=certificate'  
+        return response
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)       
