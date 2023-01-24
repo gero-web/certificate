@@ -110,9 +110,9 @@ def one_image_one_pdf(req):
     req_file =  PdfOne_img_one_pdf(data=req.data)
     if req_file.is_valid(): 
         pdf = render_pdf(req_file.data['image'])
-        #response = HttpResponse(pdf, content_type='application/pdf')
-       # response['Content-Disposition'] = 'attachment; filename=certificate'  
-        response = FileResponse(pdf)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=certificate'  
+       
         
         return response
     else:
