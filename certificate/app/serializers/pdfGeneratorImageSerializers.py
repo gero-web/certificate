@@ -16,5 +16,5 @@ class PdfGeneratorImageSerializers(serializers.Serializer):
     key = serializers.JSONField()
     email = serializers.JSONField()
     image = serializers.JSONField()
-  
+    orientation = serializers.JSONField()
    

@@ -19,9 +19,12 @@ from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 import base64,io
 
-def render_pdf(img):
-        letter = (mm_to_pt(210), mm_to_pt(297)) # A4
-        # letter = (mm_to_pt(420), mm_to_pt(297)) # A3
+def render_pdf(img,orintation):
+      
+        if orintation == 'vertical':
+            letter = (mm_to_pt(210), mm_to_pt(297)) # A4
+        else:
+            letter = (mm_to_pt(420), mm_to_pt(297)) # A3
         layout = get_layout_fun(letter)
         file = base64.b64decode(img.split('base64,')[1])
         file = io.BytesIO(file)   
@@ -88,7 +91,7 @@ def render_to_pdf(req):
     req_file =  PdfGeneratorImageSerializers(data=req.data, many= True )
     if req_file.is_valid(): 
         for  data in req_file.data:
-            pdf = render_pdf(data['image'])
+            pdf = render_pdf(data['image'], data['orientation'])
             p =  PdfCertificate.objects.create( email = data['email'], key = data['key'])
             p.path = ContentFile(pdf, name=data['key'] + '.pdf')
             p.save()  
@@ -99,7 +102,7 @@ def render_to_pdf(req):
      
      
 @extend_schema(
-    request = PdfGeneratorImageSerializers,
+    request = PdfOne_img_one_pdf,
     responses={status.HTTP_200_OK: {'msg': 'sent'}, status.HTTP_400_BAD_REQUEST: InvalidSerializer},
     description='Создает 1 pdf из картинки "!'
 )
@@ -111,9 +114,7 @@ def one_image_one_pdf(req):
     if req_file.is_valid(): 
         pdf = render_pdf(req_file.data['image'])
         response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=certificate'  
-       
-        
+        response['Content-Disposition'] = 'attachment; filename=certificate'          
         return response
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)       

@@ -56,4 +56,5 @@ class PdfCertificate(models.Model):
     path = models.FileField(upload_to='pdf/')
     email = models.EmailField()
     key = models.SlugField(unique=True)
+    orientation = models.CharField(max_length=255)
     
