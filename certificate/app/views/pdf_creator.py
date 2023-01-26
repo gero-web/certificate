@@ -19,9 +19,9 @@ from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 import base64,io
 
-def render_pdf(img,orintation):
+def render_pdf(img,orientation):
       
-        if orintation == 'vertical':
+        if orientation == 'vertical':
             letter = (mm_to_pt(210), mm_to_pt(297)) # A4
         else:
             letter = (mm_to_pt(420), mm_to_pt(297)) # A3
@@ -91,7 +91,7 @@ def render_to_pdf(req):
     req_file =  PdfGeneratorImageSerializers(data=req.data, many= True )
     if req_file.is_valid(): 
         for  data in req_file.data:
-            pdf = render_pdf(data['image'], data['orientation'])
+            pdf = render_pdf(data['image'], orientation = data['orientation'])
             p =  PdfCertificate.objects.create( email = data['email'], key = data['key'], orientation =  data['orientation'])
             p.path = ContentFile(pdf, name=data['key'] + '.pdf')
             p.save()  
@@ -112,7 +112,7 @@ def render_to_pdf(req):
 def one_image_one_pdf(req):
     req_file =  PdfOne_img_one_pdf(data=req.data)
     if req_file.is_valid(): 
-        pdf = render_pdf(req_file.data['image'])
+        pdf = render_pdf(req_file.data['image'], orientation =  req_file.data['orientation'])
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=certificate'          
         return response
