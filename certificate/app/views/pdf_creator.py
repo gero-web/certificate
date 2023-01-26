@@ -92,7 +92,7 @@ def render_to_pdf(req):
     if req_file.is_valid(): 
         for  data in req_file.data:
             pdf = render_pdf(data['image'], data['orientation'])
-            p =  PdfCertificate.objects.create( email = data['email'], key = data['key'])
+            p =  PdfCertificate.objects.create( email = data['email'], key = data['key'], orientation =  data['orientation'])
             p.path = ContentFile(pdf, name=data['key'] + '.pdf')
             p.save()  
         return JsonResponse(data= {'msg':'ok'}, status=status.HTTP_200_OK)
