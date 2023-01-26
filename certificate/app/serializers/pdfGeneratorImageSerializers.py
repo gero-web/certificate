@@ -11,6 +11,8 @@ class PdfGetCertificate(serializers.Serializer):
 
 class PdfOne_img_one_pdf(serializers.Serializer):
     image = serializers.JSONField()
+    orientation = serializers.JSONField()
+
 
 class PdfGeneratorImageSerializers(serializers.Serializer):
     key = serializers.JSONField()
