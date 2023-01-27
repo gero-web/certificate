@@ -75,7 +75,7 @@ def get_pdf(req):
         
         b64 = base64.b64encode(pdf_cert.path.read())
         encoded_str = b64.decode('utf-8')
-        return JsonResponse({ 'pdf': "data:application/pdf;base64,"+ encoded_str}, status = status.HTTP_200_OK)
+        return JsonResponse({ 'orientation': pdf_cert.orientation ,'pdf': "data:application/pdf;base64,"+ encoded_str}, status = status.HTTP_200_OK)
     else:
          return HttpResponse('body empty', status= status.HTTP_400_BAD_REQUEST)    
 
