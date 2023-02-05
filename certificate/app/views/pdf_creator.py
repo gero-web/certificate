@@ -42,13 +42,14 @@ def render_pdf(img,orientation):
 @renderer_classes([JSONRenderer])
 @parser_classes([JSONParser])
 def render_to_pdf_email(req):
+    
     req_file =  PdfEmailKeysSerializers(data=req.data)
     if req_file.is_valid(): 
         lst_exp = []
         for key in req_file.data['keys']:
             pdf_cert = PdfCertificate.objects.filter(key=key).first()
             if pdf_cert:
-                print(key)
+              
                 msg = html_url_certificate(pdf_cert.key)
                 to = (pdf_cert.email,) #, 'annivino@mail.ru'
                 send_url( msg, to)
@@ -88,11 +89,14 @@ def get_pdf(req):
 @renderer_classes([JSONRenderer])
 @parser_classes([JSONParser])
 def render_to_pdf(req):
+   
     req_file =  PdfGeneratorImageSerializers(data=req.data, many= True )
     if req_file.is_valid(): 
         for  data in req_file.data:
             pdf = render_pdf(data['image'], orientation = data['orientation'])
-            p =  PdfCertificate.objects.create( email = data['email'], key = data['key'], orientation =  data['orientation'])
+            p,created =  PdfCertificate.objects.update_or_create( email = data['email'], key = data['key'], orientation =  data['orientation'])
+            if(not created):
+                p.path.delete()
             p.path = ContentFile(pdf, name=data['key'] + '.pdf')
             p.save()  
         return JsonResponse(data= {'msg':'ok'}, status=status.HTTP_200_OK)
@@ -110,6 +114,7 @@ def render_to_pdf(req):
 @renderer_classes([JSONRenderer])
 @parser_classes([JSONParser])
 def one_image_one_pdf(req):
+   
     req_file =  PdfOne_img_one_pdf(data=req.data)
     if req_file.is_valid(): 
         pdf = render_pdf(req_file.data['image'], orientation =  req_file.data['orientation'])
